@@ -1,13 +1,26 @@
-## Summary
-Short rationale and scope.
+---
+name: Pull Request
+about: Propose a change to the codebase
+title: "[TYPE] REQ-XYZ-??: Brief description of changes"
+labels: ''
+---
 
-## Links
-Closes #__, relates to #__
+**Related Issue**
+Fixes #[issue_number]
 
-## Checklist
-- [ ] Tests updated
-- [ ] Docs updated
-- [ ] Risk noted
+**Description**
+A clear and concise description of what this pull request achieves.
 
-## References
-- Tech Design Doc v1.0 — NCS B2B E-Commerce L31–L41
+**Changes Made**
+- Change 1
+- Change 2
+
+**Acceptance Criteria**
+- [ ] Criterion 1 from the related issue is met.
+- [ ] Criterion 2 from the related issue is met.
+
+**Screenshots**
+(If applicable, add screenshots to demonstrate the changes.)
+
+**Additional Context**
+Add any other context about the pull request here.
