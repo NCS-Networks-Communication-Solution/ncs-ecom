@@ -3,3 +3,9 @@ node_modules/
 .DS_Store
 .Rhistory
 *.log
+.env.local
+.env.*.local
+
+# Allow example envs
+!backend/.env.example
+!frontend/.env.example
