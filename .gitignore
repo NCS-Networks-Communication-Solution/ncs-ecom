@@ -5,3 +5,7 @@ node_modules/
 *.log
 .env.local
 .env.*.local
+
+# Allow example envs
+!backend/.env.example
+!frontend/.env.example
