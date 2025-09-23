@@ -1,54 +1,51 @@
 name: CI
+
 on:
   push:
     branches: [ main, develop, feature/** ]
   pull_request:
     branches: [ main ]
 
-permissions:
-  contents: read
-
 env:
   NODE_VERSION: '18'
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   backend:
+    if: hashFiles('backend/package.json') != ''
     name: Backend CI
     runs-on: ubuntu-latest
-    defaults: { run: { working-directory: ./backend } }
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: 'npm'
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - run: npm run lint --if-present
       - run: npm run build --if-present
       - name: Run unit tests (non-DB)
-        run: |
-          npm run test:unit --if-present || true
-          echo "DB-dependent tests skipped (ORM pending)"
+        run: npm run test:unit --if-present || true
 
   frontend:
     name: Frontend CI
     runs-on: ubuntu-latest
-    defaults: { run: { working-directory: ./frontend } }
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run lint --if-present
-      - run: npx tsc --noEmit || true
+      - run: npx tsc --noEmit
       - run: npm run build --if-present
       - run: npm run test --if-present || echo "No frontend tests configured"
 
@@ -62,17 +59,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Validate OpenAPI spec
         run: |
-          if [ -f spec/openapi.yaml ]; then
-            npx @redocly/cli@latest lint spec/openapi.yaml || true
-            echo "OpenAPI lint ran"
+          if [ -f "spec/openapi.yaml" ]; then
+            npx @redocly/cli lint spec/openapi.yaml || true
           else
             echo "spec/openapi.yaml missing; skipping"
           fi
       - name: Validate DTOs
         run: |
-          if [ -d backend/contracts ]; then
-            (cd backend/contracts && npx tsc --noEmit || true)
-            echo "DTO TS check ran"
+          if [ -d "backend/contracts" ]; then
+            cd backend/contracts && npx tsc --noEmit || true
           else
             echo "backend/contracts missing; skipping"
           fi
@@ -89,8 +84,8 @@ jobs:
           f="${{ needs.frontend.result }}"
           a="${{ needs['api-contract'].result }}"
           echo "backend=$b frontend=$f api=$a"
-          if [ "$b" = failure ] || [ "$f" = failure ] || [ "$a" = failure ]; then
-            echo "One or more CI jobs failed"
+          if [[ "$b" == "failure" || "$f" == "failure" || "$a" == "failure" ]]; then
+            echo "❌ One or more CI jobs failed"
             exit 1
           fi
-          echo "All CI jobs passed"
+          echo "✅ All CI jobs passed"
