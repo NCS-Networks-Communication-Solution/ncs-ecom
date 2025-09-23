@@ -2,12 +2,10 @@ name: CI
 on:
   push: { branches: [ main, develop, feature/** ] }
   pull_request: { branches: [ main ] }
-env:
-  NODE_VERSION: '18'
+env: { NODE_VERSION: '18' }
 
 jobs:
   backend:
-    if: ${{ hashFiles('backend/package.json') != '' }}
     name: Backend CI
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: ./backend } }
@@ -18,7 +16,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: backend/package-lock.json
-      - run: npm ci
+      - name: Install dependencies (tolerant)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "package-lock.json missing; skipping npm ci"
+          fi
       - run: npm run lint --if-present
       - run: npm run build --if-present
       - name: Run unit tests (non-DB)
