@@ -1,68 +1,58 @@
+import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // First, create a default company if it doesn't exist
-  const company = await prisma.company.upsert({
-    where: { id: 'ncs-company-001' },
-    update: {},
+  const hashedPassword = await bcrypt.hash('password123', 10);
+
+  // Create company first
+  const company = await prisma.companies.upsert({
+    where: { name: 'Default Company' },
     create: {
-      id: 'ncs-company-001',
-      name: 'NCS Network Communications',
+      id: 'default-company-id',
+      name: 'Default Company',
+      updated_at: new Date(),
     },
+    update: {},
   });
 
-  console.log('Created/Found company:', company);
-
-  // Hash the admin password
-  const hashedAdminPassword = await bcrypt.hash('admin123', 10);
-  
-  // Create admin user
-  const adminUser = await prisma.user.upsert({
+  // Create admin user using UncheckedCreateInput (with company_id)
+  const adminUser = await prisma.users.upsert({
     where: { email: 'admin@ncs.co.th' },
-    update: {
-      password: hashedAdminPassword, // Update password in case it exists
-    },
+    update: {},
     create: {
+      id: 'admin-user-id',
       email: 'admin@ncs.co.th',
-      password: hashedAdminPassword,
-      name: 'NCS Admin',
-      companyId: company.id,
+      password: hashedPassword,
+      name: 'Admin User',
+      company_id: company.id,
       role: 'ADMIN',
     },
   });
 
-  console.log('Created/Updated admin user:', adminUser.email);
-
-  // Create a test user
-  const hashedUserPassword = await bcrypt.hash('user123', 10);
-  
-  const testUser = await prisma.user.upsert({
-    where: { email: 'user@ncs.co.th' },
-    update: {
-      password: hashedUserPassword,
-    },
+  // Create test user using UncheckedCreateInput (with company_id)
+  const testUser = await prisma.users.upsert({
+    where: { email: 'test@ncs.co.th' },
+    update: {},
     create: {
-      email: 'user@ncs.co.th',
-      password: hashedUserPassword,
+      id: 'test-user-id',
+      email: 'test@ncs.co.th',
+      password: hashedPassword,
       name: 'Test User',
-      companyId: company.id,
+      company_id: company.id,
       role: 'USER',
     },
   });
 
-  console.log('Created/Updated test user:', testUser.email);
-
-  console.log('✅ Database seeding completed successfully!');
-  console.log('🔐 Admin credentials: admin@ncs.co.th / admin123');
-  console.log('👤 Test user credentials: user@ncs.co.th / user123');
+  console.log('Seed data created:');
+  console.log('Company:', company);
+  console.log('Admin User:', adminUser);
+  console.log('Test User:', testUser);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error during database seeding:');
     console.error(e);
     process.exit(1);
   })

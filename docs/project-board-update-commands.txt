@@ -1,0 +1,12 @@
+Week 1 Status Update Commands:
+
+GitHub CLI commands to update project board:
+gh issue list --label 'REQ-01,REQ-02,REQ-03' --state open
+gh issue edit <issue-number> --add-label 'completed-week-1'
+
+Or manually update via GitHub web interface:
+1. Visit: https://github.com/NCS-Networks-Communication-Solution/ncs-ecom/projects
+2. Move REQ-01, REQ-02, REQ-03 to 'Done' column
+3. Add 'Week 1 Complete' milestone to issues
+4. Update project timeline with actual vs planned progress
+
