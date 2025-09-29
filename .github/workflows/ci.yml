@@ -30,6 +30,11 @@ jobs:
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm ci
 
+      # 🚀 ADD THIS STEP - Generate Prisma Client before build/lint/test
+      - name: Generate Prisma Client
+        if: ${{ hashFiles('backend/package-lock.json') != '' }}
+        run: npx prisma generate
+
       - name: Lint
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run lint --if-present

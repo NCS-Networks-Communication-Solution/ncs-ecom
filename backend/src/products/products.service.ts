@@ -19,7 +19,7 @@ export class ProductsService {
     if (categoryId) {
       where.categoryId = categoryId;
     }
-
+    
     return this.prisma.product.findMany({
       where,
       include: { category: true },
