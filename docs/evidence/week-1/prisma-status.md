@@ -1,0 +1,1 @@
+✅ Prisma Migration Applied Successfully
