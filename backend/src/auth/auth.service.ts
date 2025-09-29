@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -10,27 +11,34 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async register(email: string, password: string, name: string, companyId: string) {
+  async register(email: string, password: string, name: string, company_id: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    const user = await this.prisma.user.create({
+    // Create user without include first
+    const user = await this.prisma.users.create({
       data: {
+        id: randomUUID(),
         email,
         password: hashedPassword,
         name,
-        companyId,
         role: 'USER',
+        companies: {
+          connect: { id: company_id },
+        },
       },
-      include: { company: true },
     });
 
-    return this.generateTokens(user);
+    // Then fetch with company data
+    return this.prisma.users.findUnique({
+      where: { id: user.id },
+      include: { companies: true },
+    });
   }
 
   async login(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.users.findUnique({
       where: { email },
-      include: { company: true },
+      include: { companies: true },
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -45,7 +53,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       role: user.role,
-      companyId: user.companyId,
+      company_id: user.company_id,
     };
 
     return {
@@ -55,7 +63,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
-        company: user.company.name,
+        company: user.companies?.name,
       },
     };
   }
