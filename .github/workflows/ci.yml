@@ -1,7 +1,9 @@
 name: CI
+
 on:
   push: { branches: [ main, develop, feature/** ] }
   pull_request: { branches: [ main ] }
+
 env: { NODE_VERSION: '18' }
 
 jobs:
@@ -9,14 +11,15 @@ jobs:
     name: Backend CI
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: ./backend } }
+    
     steps:
       - uses: actions/checkout@v4
-
+      
       # Placeholder path when no lockfile -> mark backend as OK
       - name: Backend placeholder (no lockfile)
         if: ${{ hashFiles('backend/package-lock.json') == '' }}
         run: echo "No backend/package-lock.json. Skipping Node setup and npm. ✅"
-
+        
       # Real path only when lockfile exists
       - name: Setup Node.js
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
@@ -25,24 +28,29 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: backend/package-lock.json
-
+          
       - name: Install
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm ci
-
-      # 🚀 ADD THIS STEP - Generate Prisma Client before build/lint/test
+        
+      # Modified Prisma Client generation step
       - name: Generate Prisma Client
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
-        run: npx prisma generate
-
+        run: |
+          # Generate client without database validation for CI
+          PRISMA_CLI_QUERY_ENGINE_TYPE=binary npx prisma generate
+        env:
+          # Use a mock DATABASE_URL for CI builds only
+          DATABASE_URL: "postgresql://ci_user:ci_pass@localhost:5432/ci_db?schema=public"
+          
       - name: Lint
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run lint --if-present
-
+        
       - name: Build
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run build --if-present
-
+        
       - name: Unit tests (non-DB)
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run test:unit --if-present || true
@@ -51,6 +59,7 @@ jobs:
     name: Frontend CI
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: ./frontend } }
+    
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,11 +76,13 @@ jobs:
   api-contract:
     name: API Contract Validation
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          
       - name: Validate OpenAPI spec
         run: |
           if [ -f spec/openapi.yaml ]; then
@@ -79,6 +90,7 @@ jobs:
           else
             echo "spec/openapi.yaml missing; skipping"
           fi
+          
       - name: Validate DTOs
         run: |
           if [ -d backend/contracts ]; then
@@ -92,6 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [backend, frontend, api-contract]
     if: always()
+    
     steps:
       - name: Aggregate
         run: |

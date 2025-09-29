@@ -5,6 +5,6 @@ import { PrismaService } from '../prisma.service'; // Correct path for your setu
 
 @Module({
   controllers: [ProductsController],
-  providers: [ProductsService, PrismaService], // Add PrismaService here
+  providers: [ProductsService], // Add PrismaService here
 })
 export class ProductsModule {}
