@@ -7,7 +7,7 @@ export class ProductsService {
 
   async findAll(search?: string, categoryId?: string) {
     const where: any = {};
-    
+
     if (search) {
       where.OR = [
         { nameEn: { contains: search, mode: 'insensitive' } },
@@ -15,36 +15,42 @@ export class ProductsService {
         { sku: { contains: search, mode: 'insensitive' } },
       ];
     }
-    
+
     if (categoryId) {
       where.categoryId = categoryId;
     }
-    
-    return this.prisma.product.findMany({
+
+    return this.prisma.products.findMany({
       where,
-      include: { category: true },
+      include: { categories: true },
     });
   }
 
   async findOne(id: string) {
-    return this.prisma.product.findUnique({
+    return this.prisma.products.findUnique({
       where: { id },
-      include: { category: true },
+      include: { categories: true },
     });
   }
 
   async create(data: any) {
-    return this.prisma.product.create({
+    return this.prisma.products.create({
       data,
-      include: { category: true },
+      include: { categories: true },
     });
   }
 
   async update(id: string, data: any) {
-    return this.prisma.product.update({
+    return this.prisma.products.update({
       where: { id },
       data,
-      include: { category: true },
+      include: { categories: true },
+    });
+  }
+
+  async remove(id: string) {
+    return this.prisma.products.delete({
+      where: { id },
     });
   }
 }
