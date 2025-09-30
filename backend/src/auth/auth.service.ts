@@ -14,6 +14,7 @@ interface UserWithCompany {
   name: string;
   role: string;
   companyId: string;
+  isActive?: boolean | null;
   companies: {
     id: string;
     name: string;
@@ -64,6 +65,10 @@ export class AuthService {
 
     if (!user || !(await bcrypt.compare(dto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (user.isActive === false) {
+      throw new UnauthorizedException('Account is deactivated');
     }
 
     return this.generateTokens(user as UserWithCompany);

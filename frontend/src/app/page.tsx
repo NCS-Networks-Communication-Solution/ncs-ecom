@@ -1,6 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { CartProvider, useCart } from "@/contexts/CartContext";
+import { CartDropdown } from "@/components/cart/CartDropdown";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -25,7 +28,17 @@ type AuthResponse = {
   };
 };
 
-export default function Home() {
+function CartSessionSync({ token }: { token: string | null }) {
+  const { setAccessToken } = useCart();
+
+  useEffect(() => {
+    setAccessToken(token);
+  }, [token, setAccessToken]);
+
+  return null;
+}
+
+function HomeContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productStatus, setProductStatus] = useState<string>("Loading catalog…");
   const [email, setEmail] = useState("admin@ncs.co.th");
@@ -82,12 +95,18 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 p-8">
+      <CartSessionSync token={authResult?.accessToken ?? null} />
       <div className="max-w-5xl mx-auto space-y-10">
         <section className="space-y-2">
-          <h1 className="text-3xl font-semibold">NCS B2B Catalog Preview</h1>
-          <p className="text-sm text-slate-400">
-            Backend base URL: <span className="font-mono">{API_URL}</span>
-          </p>
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-3xl font-semibold">NCS B2B Catalog Preview</h1>
+              <p className="text-sm text-slate-400">
+                Backend base URL: <span className="font-mono">{API_URL}</span>
+              </p>
+            </div>
+            <CartDropdown />
+          </div>
         </section>
 
         <section className="grid gap-6 md:grid-cols-2">
@@ -144,6 +163,7 @@ export default function Home() {
                   </header>
                   <p className="mt-2 text-sm font-medium">{product.nameEn}</p>
                   <p className="text-xs text-slate-500">{product.nameTh}</p>
+                  <AddToCartButton productId={product.id} />
                 </article>
               ))}
               {products.length === 0 && (
@@ -166,5 +186,13 @@ export default function Home() {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <CartProvider>
+      <HomeContent />
+    </CartProvider>
   );
 }

@@ -51,6 +51,40 @@ jobs:
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: docker build --target production -t ncs-backend-ci .
 
+      - name: Configure backend image name
+        if: ${{ github.ref == 'refs/heads/main' && hashFiles('backend/package-lock.json') != '' }}
+        run: |
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}-backend"
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> "$GITHUB_ENV"
+
+      - name: Log in to GitHub Container Registry
+        if: ${{ github.ref == 'refs/heads/main' && hashFiles('backend/package-lock.json') != '' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Push backend Docker image
+        if: ${{ github.ref == 'refs/heads/main' && hashFiles('backend/package-lock.json') != '' }}
+        run: |
+          IMAGE_TAG="${IMAGE_NAME}:${GITHUB_SHA}"
+          docker tag ncs-backend-ci "$IMAGE_TAG"
+          docker push "$IMAGE_TAG"
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE_TAG")
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> "$GITHUB_ENV"
+          echo "IMAGE_DIGEST=${DIGEST}" >> "$GITHUB_ENV"
+
+      - name: Record backend image digest
+        if: ${{ github.ref == 'refs/heads/main' && hashFiles('backend/package-lock.json') != '' }}
+        run: |
+          {
+            echo "### Backend Docker image"
+            echo ""
+            echo "- Image: ${IMAGE_TAG}"
+            echo "- Digest: ${IMAGE_DIGEST}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   frontend:
     name: Frontend CI
     runs-on: ubuntu-latest
@@ -67,6 +101,27 @@ jobs:
       - run: npx tsc --noEmit || true
       - run: npm run build --if-present
       - run: npm run test --if-present || echo "No frontend tests configured"
+
+  smoke-placeholder:
+    name: Frontend Smoke (awaiting preview)
+    runs-on: ubuntu-latest
+    needs: backend
+    if: always()
+    steps:
+      - name: Preview environment pending
+        run: |
+          cat <<'MESSAGE' >> "$GITHUB_STEP_SUMMARY"
+### Frontend smoke tests
+
+Preview environment not yet available. Skipping `npm run smoke` automation.
+
+To enable:
+- Set `PREVIEW_BASE_URL` secret with the backend preview URL.
+- Replace this placeholder with curl health-check + `npm run smoke` once preview API is ready.
+- Capture logs as artifacts for triage.
+
+See docs/plans/week-2-follow-up.md for contract details.
+MESSAGE
 
   api-contract:
     name: API Contract Validation
@@ -94,16 +149,17 @@ jobs:
   status-check:
     name: CI Status
     runs-on: ubuntu-latest
-    needs: [backend, frontend, api-contract]
+    needs: [backend, frontend, smoke-placeholder, api-contract]
     if: always()
     steps:
       - name: Aggregate
         run: |
           b="${{ needs.backend.result }}"
           f="${{ needs.frontend.result }}"
+          s="${{ needs['smoke-placeholder'].result }}"
           a="${{ needs['api-contract'].result }}"
-          echo "backend=$b frontend=$f api=$a"
-          if [ "$b" = failure ] || [ "$f" = failure ] || [ "$a" = failure ]; then
+          echo "backend=$b frontend=$f smoke=$s api=$a"
+          if [ "$b" = failure ] || [ "$f" = failure ] || [ "$s" = failure ] || [ "$a" = failure ]; then
             echo "One or more CI jobs failed"
             exit 1
           fi

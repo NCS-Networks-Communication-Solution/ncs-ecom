@@ -56,6 +56,7 @@ async function main() {
         name: 'System Admin',
         role: 'ADMIN',
         companyId: ncsCompany.id,
+        isActive: true,
       },
     });
 
@@ -67,6 +68,7 @@ async function main() {
         name: 'Sales User',
         role: 'USER',
         companyId: ncsCompany.id,
+        isActive: true,
       },
     });
 
@@ -78,6 +80,7 @@ async function main() {
         name: 'Test Buyer',
         role: 'PURCHASER',
         companyId: testCompany.id,
+        isActive: true,
       },
     });
 

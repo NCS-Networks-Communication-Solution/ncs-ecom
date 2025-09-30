@@ -149,6 +149,7 @@ model users {
   role      Role      @default(USER)
   companyId String    @map("company_id")
   createdAt DateTime  @default(now()) @map("created_at")
+  isActive  Boolean   @default(true) @map("is_active")
   carts     carts[]
   orders    orders[]
   quotes    quotes[]
