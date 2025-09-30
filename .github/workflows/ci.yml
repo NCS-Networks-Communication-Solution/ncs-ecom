@@ -47,6 +47,10 @@ jobs:
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run test:unit --if-present || true
 
+      - name: Docker build (production image)
+        if: ${{ hashFiles('backend/package-lock.json') != '' }}
+        run: docker build --target production -t ncs-backend-ci .
+
   frontend:
     name: Frontend CI
     runs-on: ubuntu-latest

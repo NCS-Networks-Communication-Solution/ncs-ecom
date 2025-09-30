@@ -6,11 +6,12 @@ describe('ProductsService', () => {
   let service: ProductsService;
 
   const mockPrismaService = {
-    product: {
+    products: {
       findMany: jest.fn(() => []),
       findUnique: jest.fn(() => ({ id: '1', nameEn: 'Test Product' })),
       create: jest.fn(() => ({ id: '1', nameEn: 'New Product' })),
       update: jest.fn(() => ({ id: '1', nameEn: 'Updated Product' })),
+      delete: jest.fn(() => ({ id: '1' })),
     },
   };
 
@@ -34,6 +35,6 @@ describe('ProductsService', () => {
 
   it('should find all products', async () => {
     expect(await service.findAll()).toEqual([]);
-    expect(mockPrismaService.product.findMany).toHaveBeenCalled();
+    expect(mockPrismaService.products.findMany).toHaveBeenCalled();
   });
 });

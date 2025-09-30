@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -6,7 +7,7 @@ export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(search?: string, categoryId?: string) {
-    const where: any = {};
+    const where: Prisma.productsWhereInput = {};
 
     if (search) {
       where.OR = [

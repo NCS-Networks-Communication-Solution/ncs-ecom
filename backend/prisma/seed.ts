@@ -17,6 +17,7 @@ async function main() {
     await prisma.carts.deleteMany();
     await prisma.products.deleteMany();
     await prisma.categories.deleteMany();
+    await prisma.refresh_tokens.deleteMany();
     await prisma.users.deleteMany();
     await prisma.companies.deleteMany();
 
@@ -26,9 +27,9 @@ async function main() {
       data: {
         id: 'ncs-company-id',
         name: 'NCS Networks',
-        tax_id: '0105558123456',
+        taxId: '0105558123456',
         tier: 'ADMIN',
-        updated_at: new Date(),
+        updatedAt: new Date(),
       },
     });
 
@@ -36,9 +37,9 @@ async function main() {
       data: {
         id: 'test-company-id',
         name: 'Test Corporation',
-        tax_id: '0105558654321',
+        taxId: '0105558654321',
         tier: 'STANDARD',
-        updated_at: new Date(),
+        updatedAt: new Date(),
       },
     });
 
@@ -54,7 +55,7 @@ async function main() {
         password: adminPassword,
         name: 'System Admin',
         role: 'ADMIN',
-        company_id: ncsCompany.id,
+        companyId: ncsCompany.id,
       },
     });
 
@@ -65,7 +66,7 @@ async function main() {
         password: userPassword,
         name: 'Sales User',
         role: 'USER',
-        company_id: ncsCompany.id,
+        companyId: ncsCompany.id,
       },
     });
 
@@ -76,7 +77,7 @@ async function main() {
         password: userPassword,
         name: 'Test Buyer',
         role: 'PURCHASER',
-        company_id: testCompany.id,
+        companyId: testCompany.id,
       },
     });
 
@@ -86,8 +87,8 @@ async function main() {
       data: {
         id: 'networking-category-id',
         name: 'networking',
-        name_en: 'Networking Equipment',
-        name_th: 'อุปกรณ์เครือข่าย',
+        nameEn: 'Networking Equipment',
+        nameTh: 'อุปกรณ์เครือข่าย',
         description: 'Switches, Routers, and Network Infrastructure',
       },
     });
@@ -96,8 +97,8 @@ async function main() {
       data: {
         id: 'security-category-id',
         name: 'security',
-        name_en: 'Security Solutions',
-        name_th: 'ระบบความปลอดภัย',
+        nameEn: 'Security Solutions',
+        nameTh: 'ระบบความปลอดภัย',
         description: 'Firewalls, VPN, and Security Appliances',
       },
     });
@@ -106,8 +107,8 @@ async function main() {
       data: {
         id: 'wireless-category-id',
         name: 'wireless',
-        name_en: 'Wireless Solutions',
-        name_th: 'อุปกรณ์ไร้สาย',
+        nameEn: 'Wireless Solutions',
+        nameTh: 'อุปกรณ์ไร้สาย',
         description: 'Access Points, Controllers, and Wireless Infrastructure',
       },
     });
@@ -119,81 +120,81 @@ async function main() {
       {
         id: 'sw-24p-1g-id',
         sku: 'SW-24P-1G',
-        name_en: '24-Port Gigabit Managed Switch',
-        name_th: 'สวิตช์ 24 พอร์ต กิกะบิต แบบจัดการได้',
+        nameEn: '24-Port Gigabit Managed Switch',
+        nameTh: 'สวิตช์ 24 พอร์ต กิกะบิต แบบจัดการได้',
         description: 'Enterprise-grade 24-port gigabit managed switch with PoE+',
         price: 15000,
         stock: 25,
-        category_id: networkingCategory.id,
-        updated_at: new Date(),
+        categoryId: networkingCategory.id,
+        updatedAt: new Date(),
       },
       {
         id: 'sw-48p-10g-id',
         sku: 'SW-48P-10G',
-        name_en: '48-Port 10G Switch',
-        name_th: 'สวิตช์ 48 พอร์ต 10 กิกะบิต',
+        nameEn: '48-Port 10G Switch',
+        nameTh: 'สวิตช์ 48 พอร์ต 10 กิกะบิต',
         description: 'High-performance 48-port 10G switch for data centers',
         price: 85000,
         stock: 8,
-        category_id: networkingCategory.id,
-        updated_at: new Date(),
+        categoryId: networkingCategory.id,
+        updatedAt: new Date(),
       },
       {
         id: 'rt-ent-5g-id',
         sku: 'RT-ENT-5G',
-        name_en: 'Enterprise 5G Router',
-        name_th: 'เราเตอร์องค์กร 5G',
+        nameEn: 'Enterprise 5G Router',
+        nameTh: 'เราเตอร์องค์กร 5G',
         description: 'Multi-WAN router with 5G support and failover',
         price: 32000,
         stock: 15,
-        category_id: networkingCategory.id,
-        updated_at: new Date(),
+        categoryId: networkingCategory.id,
+        updatedAt: new Date(),
       },
       // Security products
       {
         id: 'fw-utm-500-id',
         sku: 'FW-UTM-500',
-        name_en: 'UTM Firewall 500',
-        name_th: 'ไฟร์วอลล์ UTM 500',
+        nameEn: 'UTM Firewall 500',
+        nameTh: 'ไฟร์วอลล์ UTM 500',
         description: 'Unified Threat Management firewall for medium businesses',
         price: 45000,
         stock: 12,
-        category_id: securityCategory.id,
-        updated_at: new Date(),
+        categoryId: securityCategory.id,
+        updatedAt: new Date(),
       },
       {
         id: 'vpn-gw-100-id',
         sku: 'VPN-GW-100',
-        name_en: 'VPN Gateway 100 Users',
-        name_th: 'เกตเวย์ VPN 100 ผู้ใช้',
+        nameEn: 'VPN Gateway 100 Users',
+        nameTh: 'เกตเวย์ VPN 100 ผู้ใช้',
         description: 'Secure VPN gateway supporting up to 100 concurrent users',
         price: 28000,
         stock: 20,
-        category_id: securityCategory.id,
-        updated_at: new Date(),
+        categoryId: securityCategory.id,
+        updatedAt: new Date(),
       },
       // Wireless products
       {
         id: 'ap-ac-pro-id',
         sku: 'AP-AC-PRO',
-        name_en: 'WiFi 6 Access Point Pro',
-        name_th: 'จุดกระจายสัญญาณ WiFi 6 โปร',
+        nameEn: 'WiFi 6 Access Point Pro',
+        nameTh: 'จุดกระจายสัญญาณ WiFi 6 โปร',
         description: 'High-density WiFi 6 access point for enterprise',
         price: 8500,
         stock: 50,
-        category_id: wirelessCategory.id,
-        updated_at: new Date(),
+        categoryId: wirelessCategory.id,
+        updatedAt: new Date(),
       },
       {
         id: 'wlc-500-id',
         sku: 'WLC-500',
-        name_en: 'Wireless Controller 500 APs',
-        name_th: 'ตัวควบคุมไร้สาย 500 จุด',
+        nameEn: 'Wireless Controller 500 APs',
+        nameTh: 'ตัวควบคุมไร้สาย 500 จุด',
         description: 'Centralized wireless controller for up to 500 access points',
         price: 120000,
         stock: 5,
-        category_id: wirelessCategory.id,
-        updated_at: new Date(),
+        categoryId: wirelessCategory.id,
+        updatedAt: new Date(),
       },
     ];
 

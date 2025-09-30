@@ -1,0 +1,78 @@
+Last login: Mon Sep 22 10:01:15 on ttys000
+fill@Phakkhapons-MacBook-Pro ~ % cd ~/ncs-ecom
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % cat > docker-compose.yml << 'EOF'
+> version: '3.8'
+> services:
+>   postgres:
+>     image: postgres:15-alpine
+>     environment:
+>       POSTGRES_DB: ncsdb
+>       POSTGRES_USER: ncsadmin
+>       POSTGRES_PASSWORD: ${DB_PASSWORD:-defaultpass}
+>     volumes:
+>       - pgdata:/var/lib/postgresql/data
+>     ports:
+>       - "5432:5432"
+>     healthcheck:
+>       test: ["CMD-SHELL", "pg_isready -U ncsadmin"]
+>       interval: 10s
+>       timeout: 5s
+>       retries: 5
+>   redis:
+>     image: redis:7-alpine
+>     ports:
+>       - "6379:6379"
+>     volumes:
+>       - redisdata:/data
+>     healthcheck:
+>       test: ["CMD", "redis-cli", "ping"]
+>       interval: 10s
+>       timeout: 5s
+>       retries: 5
+> volumes:
+>   pgdata:
+>   redisdata:
+> EOF
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % cat > .env << 'EOF'
+> NODE_ENV=development
+> DB_PASSWORD=ncs2025secure
+> DATABASE_URL=postgresql://ncsadmin:ncs2025secure@localhost:5432/ncsdb
+> REDIS_URL=redis://localhost:6379
+> JWT_SECRET=ncs-jwt-secret-dev-2025
+> EOF
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % docker compose up -d
+WARN[0000] /Users/fill/ncs-ecom/docker-compose.yml: the attribute `version` is obsolete
+[+] Pulling 2/2
+ ✔ redis Pulled
+ ✔ postgres Pulled
+[+] Running 5/5
+ ✔ Network ncs-ecom_default         Created
+ ✔ Volume "ncs-ecom_pgdata"         Created
+ ✔ Volume "ncs-ecom_redisdata"       Created
+ ✔ Container ncs-ecom-postgres-1  Started
+ ✔ Container ncs-ecom-redis-1     Started
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % docker compose ps
+NAME                  IMAGE                COMMAND                  SERVICE    CREATED          STATUS                   PORTS
+ncs-ecom-postgres-1   postgres:15-alpine   "docker-entrypoint.s…"   postgres   25 seconds ago   Up 24 seconds (healthy)   0.0.0.0:5432->5432/tcp
+ncs-ecom-redis-1      redis:7-alpine       "docker-entrypoint.s…"   redis      25 seconds ago   Up 24 seconds (healthy)   0.0.0.0:6379->6379/tcp
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % docker exec -it ncs-ecom-postgres-1 psql -U ncsadmin -d ncsdb -c '\l'
+                                         List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ ncsdb     | ncsadmin | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres  | ncsadmin | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | ncsadmin | UTF8     | en_US.utf8 | en_US.utf8 | =c/ncsadmin+
+           |          |          |            |            | ncsadmin=CTc/ncsadmin
+ template1 | ncsadmin | UTF8     | en_US.utf8 | en_US.utf8 | =c/ncsadmin+
+           |          |          |            |            | ncsadmin=CTc/ncsadmin
+(4 rows)
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom % docker exec -it ncs-ecom-redis-1 redis-cli ping
+PONG
+
+fill@Phakkhapons-MacBook-Pro ncs-ecom %
