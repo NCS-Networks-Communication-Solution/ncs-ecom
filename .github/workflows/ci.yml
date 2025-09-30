@@ -111,17 +111,17 @@ jobs:
       - name: Preview environment pending
         run: |
           cat <<'MESSAGE' >> "$GITHUB_STEP_SUMMARY"
-### Frontend smoke tests
+          ### Frontend smoke tests
 
-Preview environment not yet available. Skipping `npm run smoke` automation.
+          Preview environment not yet available. Skipping `npm run smoke` automation.
 
-To enable:
-- Set `PREVIEW_BASE_URL` secret with the backend preview URL.
-- Replace this placeholder with curl health-check + `npm run smoke` once preview API is ready.
-- Capture logs as artifacts for triage.
+          To enable:
+          - Set `PREVIEW_BASE_URL` secret with the backend preview URL.
+          - Replace this placeholder with curl health-check + `npm run smoke` once preview API is ready.
+          - Capture logs as artifacts for triage.
 
-See docs/plans/week-2-follow-up.md for contract details.
-MESSAGE
+          See docs/plans/week-2-follow-up.md for contract details.
+          MESSAGE
 
   api-contract:
     name: API Contract Validation
