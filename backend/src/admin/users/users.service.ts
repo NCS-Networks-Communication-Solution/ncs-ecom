@@ -114,7 +114,7 @@ export class AdminUsersService {
     }
 
     if (dto.companyId) {
-      data.companyId = dto.companyId;
+      data.companies = { connect: { id: dto.companyId } };
     }
 
     if (dto.password) {

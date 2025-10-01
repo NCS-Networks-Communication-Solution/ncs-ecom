@@ -117,7 +117,7 @@ export class AdminProductsService {
     }
 
     if (dto.categoryId) {
-      data.categoryId = dto.categoryId;
+      data.categories = { connect: { id: dto.categoryId } };
     }
 
     data.updatedAt = new Date();
