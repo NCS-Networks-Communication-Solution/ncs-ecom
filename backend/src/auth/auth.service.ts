@@ -75,6 +75,7 @@ export class AuthService {
   }
 
   private async generateTokens(user: UserWithCompany): Promise<AuthResponse> {
+
     const payload = {
       sub: user.id,
       email: user.email,
@@ -92,6 +93,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       expiresIn: AuthService.ACCESS_TOKEN_TTL_SECONDS,
+
       user: {
         id: user.id,
         name: user.name,
