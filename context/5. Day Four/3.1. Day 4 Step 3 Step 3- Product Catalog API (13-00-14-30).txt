@@ -1,0 +1,65 @@
+Last login: Mon Sep 29 14:01:47 on ttys001
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % cd ~/Desktop/Project_Hiroshima/ncs-ecom
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd ~/Desktop/Project_Hiroshima/ncs-ecom/backend
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % nest g module products
+nest g controller products
+nest g service products
+
+CREATE src/products/products.module.ts (85 bytes)
+UPDATE src/app.module.ts (515 bytes)
+CREATE src/products/products.controller.spec.ts (506 bytes)
+CREATE src/products/products.controller.ts (105 bytes)
+UPDATE src/products/products.module.ts (182 bytes)
+CREATE src/products/products.service.spec.ts (474 bytes)
+CREATE src/products/products.service.ts (92 bytes)
+UPDATE src/products/products.module.ts (268 bytes)
+pkaewmanee@Phakkhapons-MacBook-Pro backend % >....                              
+  async findOne(id: string) {
+    return this.prisma.product.findUnique({
+      where: { id },
+      include: { category: true },
+    });
+  }
+
+  async create(data: any) {
+    return this.prisma.product.create({
+      data,
+      include: { category: true },
+    });
+  }
+
+  async update(id: string, data: any) {
+    return this.prisma.product.update({
+      where: { id },
+      data,
+      include: { category: true },
+    });
+  }
+}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % >....                              
+    @Query('categoryId') categoryId?: string,
+  ) {
+    return this.productsService.findAll(search, categoryId);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
+  }
+
+  @Post()
+  @UseGuards(AuthGuard('jwt'))
+  async create(@Body() data: any) {
+    return this.productsService.create(data);
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('id') id: string, @Body() data: any) {
+    return this.productsService.update(id, data);
+  }
+}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % 

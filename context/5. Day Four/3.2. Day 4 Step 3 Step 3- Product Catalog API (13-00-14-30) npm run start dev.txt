@@ -1,0 +1,25 @@
+[2:32:11 PM] Starting compilation in watch mode...
+
+[2:32:13 PM] Found 0 errors. Watching for file changes.
+
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] PassportModule dependencies initialized +30ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] UsersModule dependencies initialized +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] JwtModule dependencies initialized +20ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] AppModule dependencies initialized +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] AuthModule dependencies initialized +1ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [InstanceLoader] ProductsModule dependencies initialized +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RoutesResolver] AppController {/}: +3ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/, GET} route +2ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/health, GET} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RoutesResolver] AuthController {/auth}: +1ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/auth/register, POST} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/auth/login, POST} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RoutesResolver] ProductsController {/products}: +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/products, GET} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/products/:id, GET} route +1ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/products, POST} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [RouterExplorer] Mapped {/products/:id, PUT} route +0ms
+[Nest] 11739  - 09/29/2025, 2:32:14 PM     LOG [NestApplication] Nest application successfully started +50ms
+🚀 NCS Backend API running on http://localhost:3000
+

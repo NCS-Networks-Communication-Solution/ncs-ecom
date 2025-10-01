@@ -1,0 +1,170 @@
+Last login: Fri Sep 26 09:45:33 on ttys001
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % cd ~/Desktop/Project_Hiroshima/ncs-ecom
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd backend
+pkaewmanee@Phakkhapons-MacBook-Pro backend % ls
+check_nodes.sh		diag_node_check.sh	test.js
+contracts		package.json
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm install prisma @prisma/client @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt
+npm install @nestjs/core @nestjs/common @nestjs/platform-express reflect-metadata rxjs
+
+added 80 packages, and audited 81 packages in 39s
+
+16 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 11.6.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+npm notice To update run: npm install -g npm@11.6.1
+npm notice
+
+added 88 packages, and audited 169 packages in 7s
+
+33 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma init
+Fetching latest updates for this subcommand...
+
+✔ Your Prisma schema was created at prisma/schema.prisma
+  You can now open it in your favorite editor.
+
+Next steps:
+1. Run prisma dev to start a local Prisma Postgres server.
+2. Define models in the schema.prisma file.
+3. Run prisma migrate dev to migrate your local Prisma Postgres database.
+4. Tip: Explore how you can extend the ORM with scalable connection pooling, global caching, and a managed serverless Postgres database. Read: https://pris.ly/cli/beyond-orm
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+    
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % >....                              
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+  name     String
+  role     Role   @default(USER)
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+}
+
+model Company {
+  id   String @id @default(uuid())
+  name String @unique
+  users User[]
+}
+
+enum Role { USER ADMIN }
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma migrate dev --name init
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Error: Prisma schema validation - (get-config wasm)
+Error code: P1012
+error: Error validating: This line is invalid. It does not start with any known Prisma schema keyword.
+  -->  prisma/schema.prisma:26
+   | 
+25 | 
+26 | enum Role { USER ADMIN }
+27 | 
+   | 
+
+Validation Error Count: 1
+[Context: getConfig]
+
+Prisma CLI Version : 6.16.2
+pkaewmanee@Phakkhapons-MacBook-Pro backend % >....                              
+  id        String  @id @default(uuid())
+  email     String  @unique
+  password  String
+  name      String
+  role      Role    @default(USER)
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+}
+
+model Company {
+  id    String @id @default(uuid())
+  name  String @unique
+  users User[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+EOF
+
+# Now run the migration
+npx prisma migrate dev --name init
+zsh: command not found: #
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "postgres", schema "public" at "localhost:51213"
+
+Error: P1001
+
+Can't reach database server at `localhost:51214`
+
+Please make sure your database server is running at `localhost:51214`.
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cp ../.env .env
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat .env
+NODE_ENV=development
+DB_PASSWORD=ncs2025secure
+DATABASE_URL=postgresql://ncsadmin:ncs2025secure@localhost:5432/ncsdb
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=ncs-jwt-secret-dev-2025
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma migrate dev --name init
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "ncsdb", schema "public" at "localhost:5432"
+
+Applying migration `20250926073411_init`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma/migrations/
+  └─ 20250926073411_init/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+✔ Generated Prisma Client (v6.16.2) to ./node_modules/@prisma/client in 85ms
+
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma generate
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v6.16.2) to ./node_modules/@prisma/client in 65ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm install @nestjs/prisma
+npm error code E404
+npm error 404 Not Found - GET https://registry.npmjs.org/@nestjs%2fprisma - Not found
+npm error 404
+npm error 404  '@nestjs/prisma@*' is not in this registry.
+npm error 404
+npm error 404 Note that you can also install from a
+npm error 404 tarball, folder, http url, or git url.
+npm error A complete log of this run can be found in: /Users/pkaewmanee/.npm/_logs/2025-09-26T07_34_24_888Z-debug-0.log
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma studio
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5555
+Prisma schema loaded from prisma/schema.prisma
+

@@ -1,0 +1,68 @@
+Last login: Thu Sep 25 15:30:48 on ttys000
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % ls
+Applications	Documents	Library		Music		Public
+Desktop		Downloads	Movies		Pictures
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % cd DEsktop
+pkaewmanee@Phakkhapons-MacBook-Pro DEsktop % cd Project_Hiroshima 
+pkaewmanee@Phakkhapons-MacBook-Pro Project_Hiroshima % ls
+ComEngFinalPro		Icon?			ncs-ecom
+Hiroshima_Vault		Slivery Moon		purchase_order_app
+pkaewmanee@Phakkhapons-MacBook-Pro Project_Hiroshima % cd ncs-ecom
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % pwd
+ls -la
+/Users/pkaewmanee/DEsktop/Project_Hiroshima/ncs-ecom
+total 88
+drwx------  13 pkaewmanee  staff    416 Sep 24 16:45 .
+drwxr-xr-x@  9 pkaewmanee  staff    288 Sep 24 16:45 ..
+-rw-r--r--@  1 pkaewmanee  staff   6148 Sep 24 16:45 .DS_Store
+-rw-r--r--   1 pkaewmanee  staff    132 Sep 18 15:45 CODE_OF_CONDUCT.md
+-rw-r--r--   1 pkaewmanee  staff    260 Sep 18 15:45 CONTRIBUTING.md
+-rw-r--r--   1 pkaewmanee  staff  11351 Sep 23 15:17 LICENSE
+-rw-r--r--@  1 pkaewmanee  staff    850 Sep 18 15:45 README.md
+drwxr-xr-x  10 pkaewmanee  staff    320 Sep 23 15:56 backend
+-rw-r--r--@  1 pkaewmanee  staff    873 Sep 22 12:58 docker-compose.yml
+drwxr-xr-x  17 pkaewmanee  staff    544 Sep 24 11:50 frontend
+-rwxr-xr-x   1 pkaewmanee  staff   1979 Sep 23 15:17 set-backlog.sh
+drwxr-xr-x   4 pkaewmanee  staff    128 Sep 23 11:15 spec
+-rw-r--r--   1 pkaewmanee  staff   1150 Sep 22 10:49 tsconfig.json
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % git status
+git remote -v
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd ~/Desktop/Project_Hiroshima
+rm -rf ncs-ecom            # only if you don’t need local changes
+git clone <YOUR_REPO_URL>  # e.g. https://github.com/<org>/ncs-ecom.git
+cd ncs-ecom
+git status
+git remote -v
+git pull origin main
+
+zsh: no such file or directory: YOUR_REPO_URL
+cd: no such file or directory: ncs-ecom
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+pkaewmanee@Phakkhapons-MacBook-Pro Project_Hiroshima % cd ~/Desktop/Project_Hiroshima
+rm -rf ncs-ecom            # only if you don’t need local changes
+git clone https://github.com/NCS-Networks-Communication-Solution/ncs-ecom
+cd ncs-ecom
+git status
+git remote -v
+git pull origin main
+Cloning into 'ncs-ecom'...
+remote: Enumerating objects: 136, done.
+remote: Counting objects: 100% (136/136), done.
+remote: Compressing objects: 100% (101/101), done.
+remote: Total 136 (delta 39), reused 108 (delta 19), pack-reused 0 (from 0)
+Receiving objects: 100% (136/136), 91.78 KiB | 639.00 KiB/s, done.
+Resolving deltas: 100% (39/39), done.
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+origin	https://github.com/NCS-Networks-Communication-Solution/ncs-ecom (fetch)
+origin	https://github.com/NCS-Networks-Communication-Solution/ncs-ecom (push)
+From https://github.com/NCS-Networks-Communication-Solution/ncs-ecom
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % 
