@@ -6,13 +6,17 @@ const prisma = new PrismaClient();
 async function main() {
   const hashedPassword = await bcrypt.hash('password123', 10);
 
+  await prisma.refresh_tokens.deleteMany();
+  await prisma.users.deleteMany();
+  await prisma.companies.deleteMany();
+
   // Create company first
   const company = await prisma.companies.upsert({
     where: { name: 'Default Company' },
     create: {
       id: 'default-company-id',
       name: 'Default Company',
-      updated_at: new Date(),
+      updatedAt: new Date(),
     },
     update: {},
   });
@@ -26,7 +30,7 @@ async function main() {
       email: 'admin@ncs.co.th',
       password: hashedPassword,
       name: 'Admin User',
-      company_id: company.id,
+      companyId: company.id,
       role: 'ADMIN',
     },
   });
@@ -40,8 +44,8 @@ async function main() {
       email: 'test@ncs.co.th',
       password: hashedPassword,
       name: 'Test User',
-      company_id: company.id,
-      role: 'USER',
+      companyId: company.id,
+      role: 'VIEWER',
     },
   });
 

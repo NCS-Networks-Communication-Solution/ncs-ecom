@@ -1,0 +1,43 @@
+Last login: Tue Sep 30 13:41:15 on ttys000
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker build --target production -t ncs-backend-local backend/
+[+] Building 17.3s (19/19) FINISHED                        docker:desktop-linux
+ => [internal] load build definition from Dockerfile                       0.0s
+ => => transferring dockerfile: 603B                                       0.0s
+ => resolve image config for docker-image://docker.io/docker/dockerfile:1  2.3s
+ => [auth] docker/dockerfile:pull token for registry-1.docker.io           0.0s
+ => CACHED docker-image://docker.io/docker/dockerfile:1@sha256:dabfc0969b  0.0s
+ => => resolve docker.io/docker/dockerfile:1@sha256:dabfc0969b935b2080555  0.0s
+ => [internal] load metadata for docker.io/library/node:18-alpine          1.6s
+ => [auth] library/node:pull token for registry-1.docker.io                0.0s
+ => [internal] load .dockerignore                                          0.0s
+ => => transferring context: 111B                                          0.0s
+ => [deps 1/4] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c  0.0s
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3  0.0s
+ => [internal] load build context                                          0.0s
+ => => transferring context: 443.65kB                                      0.0s
+ => CACHED [deps 2/4] WORKDIR /app                                         0.0s
+ => CACHED [deps 3/4] COPY package.json package-lock.json ./               0.0s
+ => CACHED [deps 4/4] RUN npm ci                                           0.0s
+ => CACHED [builder 1/3] WORKDIR /app                                      0.0s
+ => [builder 2/3] COPY . .                                                 0.0s
+ => [builder 3/3] RUN npm run build                                       10.9s
+ => CACHED [production 4/6] COPY prisma ./prisma                           0.0s 
+ => CACHED [production 5/6] COPY --from=deps /app/node_modules ./node_mod  0.0s 
+ => [production 6/6] COPY --from=builder /app/dist ./dist                  0.0s
+ => exporting to image                                                     0.2s
+ => => exporting layers                                                    0.1s
+ => => exporting manifest sha256:8f2aa3eb69a2baf55b3947976d458a46134bd580  0.0s
+ => => exporting config sha256:1a9d1df57f456c9ec8fada09ff8217ec15ff1f695d  0.0s
+ => => exporting attestation manifest sha256:4ce3e22da6fac4b4358b9aedd94f  0.0s
+ => => exporting manifest list sha256:d457f3868e340f54d6c5dbb6ebd01278479  0.0s
+ => => naming to docker.io/library/ncs-backend-local:latest                0.0s
+ => => unpacking to docker.io/library/ncs-backend-local:latest             0.0s
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker compose up -d postgres redis
+[+] Running 2/2
+ ✔ postgres Pulled                                                         6.4s 
+ ✔ redis Pulled                                                            6.3s 
+[+] Running 3/3
+ ✔ Network ncs-ecom_default       Created                                  0.1s 
+ ✔ Container ncs-ecom-postgres-1  Start...                                 0.5s 
+ ✔ Container ncs-ecom-redis-1     Started                                  0.5s 
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % 

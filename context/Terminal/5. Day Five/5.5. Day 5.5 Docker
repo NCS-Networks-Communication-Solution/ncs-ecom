@@ -1,0 +1,24 @@
+Last login: Wed Oct  1 12:56:09 on ttys003
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker compose down --volumes
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker image rm ncs-backend-local
+Untagged: ncs-backend-local:latest
+Deleted: sha256:d457f3868e340f54d6c5dbb6ebd0127847943d96ea71df7e93f0dbb22bce588d
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker ps -a
+docker volume ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+DRIVER    VOLUME NAME
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker compose --progress plain build
+^C^C%                                                                                  pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % docker compose --progress plain build backend
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+Last login: Wed Oct  1 13:56:33 on ttys000
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd backend
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run lint
+
+> ncs-backend@0.1.0 lint
+> eslint "{src,apps,libs,test}/**/*.ts" --fix
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run test
+
+> ncs-backend@0.1.0 test
+> jest
+
+Error: EACCES: permission denied, mkdir '/private/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/T/jest_dx'
+    at Object.mkdirSync (node:fs:1363:26)
+    at createDirectory (/Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/jest-util/build/createDirectory.js:63:10)
+    at /Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/@jest/core/build/cli/index.js:250:39
+    at Array.map (<anonymous>)
+    at buildContextsAndHasteMaps (/Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/@jest/core/build/cli/index.js:249:13)
+    at _run10000 (/Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/@jest/core/build/cli/index.js:327:47)
+    at runCLI (/Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/@jest/core/build/cli/index.js:198:9)
+    at async Object.run (/Users/pkaewmanee/Desktop/Project_Hiroshima/ncs-ecom/backend/node_modules/jest-cli/build/run.js:130:37)
+pkaewmanee@Phakkhapons-MacBook-Pro backend % sudo chown -R "$(whoami)" /private/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/T
+
+Password:
+pkaewmanee@Phakkhapons-MacBook-Pro backend % sudo rm -rf /private/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/T
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % mkdir -p .jest-tmp
+TMPDIR="$(pwd)/.jest-tmp" npm run test
+
+
+> ncs-backend@0.1.0 test
+> jest
+
+ PASS  src/users/users.service.spec.ts
+ PASS  src/products/products.service.spec.ts
+ PASS  src/products/products.controller.spec.ts
+ PASS  src/auth/auth.controller.spec.ts
+ PASS  src/auth/auth.service.spec.ts
+
+Test Suites: 5 passed, 5 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        5.859 s
+Ran all test suites.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % 
+

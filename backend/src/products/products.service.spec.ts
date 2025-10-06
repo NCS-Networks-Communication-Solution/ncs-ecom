@@ -6,11 +6,17 @@ describe('ProductsService', () => {
   let service: ProductsService;
 
   const mockPrismaService = {
-    product: {
+    $transaction: jest.fn(async (actions: any[]) => Promise.all(actions)),
+    products: {
       findMany: jest.fn(() => []),
       findUnique: jest.fn(() => ({ id: '1', nameEn: 'Test Product' })),
       create: jest.fn(() => ({ id: '1', nameEn: 'New Product' })),
       update: jest.fn(() => ({ id: '1', nameEn: 'Updated Product' })),
+      delete: jest.fn(() => ({ id: '1' })),
+      count: jest.fn(() => 0),
+    },
+    categories: {
+      findUnique: jest.fn(() => ({ id: '1', name: 'Category' })),
     },
   };
 
@@ -33,7 +39,13 @@ describe('ProductsService', () => {
   });
 
   it('should find all products', async () => {
-    expect(await service.findAll()).toEqual([]);
-    expect(mockPrismaService.product.findMany).toHaveBeenCalled();
+    await expect(service.findAll()).resolves.toEqual({
+      items: [],
+      total: 0,
+      page: 1,
+      limit: 20,
+      hasMore: false,
+    });
+    expect(mockPrismaService.products.findMany).toHaveBeenCalled();
   });
 });
