@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
@@ -6,20 +6,18 @@ import { randomUUID } from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponse } from './dto/auth-response.dto';
+import { AdminCompanySummary, AdminRole, AdminUser } from '../types/admin.types';
+import { Prisma } from '@prisma/client';
 
 interface UserWithCompany {
   id: string;
   email: string;
   password: string;
   name: string;
-  role: string;
+  role: AdminRole;
   companyId: string;
   isActive?: boolean | null;
-  companies: {
-    id: string;
-    name: string;
-    tier: string;
-  } | null;
+  companies: AdminCompanySummary | null;
 }
 
 @Injectable()
@@ -33,28 +31,69 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponse> {
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    try {
+      const existingUser = await this.prisma.users.findUnique({ where: { email: dto.email } });
+      if (existingUser) {
+        throw new ConflictException('Email address is already registered');
+      }
 
-    const createdUser = await this.prisma.users.create({
-      data: {
-        id: randomUUID(),
-        email: dto.email,
-        password: hashedPassword,
-        name: dto.name,
-        role: 'USER',
-        companies: {
-          connect: { id: dto.companyId },
+      const company = await this.prisma.companies.findUnique({ where: { id: dto.companyId } });
+      if (!company) {
+        throw new BadRequestException('Invalid company ID');
+      }
+
+      const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+      const createdUser = await this.prisma.users.create({
+        data: {
+          id: randomUUID(),
+          email: dto.email,
+          password: hashedPassword,
+          name: dto.name,
+          role: 'PURCHASER',
+          companies: {
+            connect: { id: dto.companyId },
+          },
         },
-      },
-    });
+      });
 
-    const user = await this.findUserWithCompany(createdUser.id);
+      const user = await this.findUserWithCompany(createdUser.id);
 
-    if (!user) {
-      throw new UnauthorizedException('Unable to load created user');
+      if (!user) {
+        throw new UnauthorizedException('Unable to load created user');
+      }
+
+      return this.generateTokens(user);
+    } catch (error) {
+      if (
+        error instanceof ConflictException ||
+        error instanceof BadRequestException ||
+        error instanceof UnauthorizedException
+      ) {
+        throw error;
+      }
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          const target = error.meta?.target as string[] | undefined;
+          if (target?.includes('email')) {
+            throw new ConflictException('Email address is already registered');
+          }
+          throw new ConflictException('Registration failed due to duplicate data');
+        }
+
+        if (error.code === 'P2025') {
+          throw new BadRequestException('Invalid company ID');
+        }
+      }
+
+      if (error instanceof Prisma.PrismaClientInitializationError) {
+        throw new BadRequestException('Database connection failed');
+      }
+
+      console.error('Unexpected registration error:', error);
+      throw new BadRequestException('Registration failed due to an unexpected error');
     }
-
-    return this.generateTokens(user);
   }
 
   async login(dto: LoginDto): Promise<AuthResponse> {
@@ -65,6 +104,50 @@ export class AuthService {
 
     if (!user || !(await bcrypt.compare(dto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (user.isActive === false) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    return this.generateTokens(user as UserWithCompany);
+  }
+
+  async refreshToken(refreshToken: string): Promise<AuthResponse> {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token required');
+    }
+
+    let payload: any;
+    try {
+      payload = this.jwtService.verify(refreshToken);
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    if (!payload?.sub || payload.type !== 'refresh') {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const storedToken = await this.prisma.refresh_tokens.findFirst({
+      where: {
+        userId: payload.sub,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!storedToken) {
+      throw new UnauthorizedException('Refresh token expired or not found');
+    }
+
+    const isValid = await bcrypt.compare(refreshToken, storedToken.tokenHash);
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const user = await this.findUserWithCompany(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
 
     if (user.isActive === false) {
@@ -93,20 +176,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       expiresIn: AuthService.ACCESS_TOKEN_TTL_SECONDS,
-
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        company: user.companies
-          ? {
-              id: user.companies.id,
-              name: user.companies.name,
-              tier: user.companies.tier,
-            }
-          : null,
-      },
+      user: this.mapToAdminUser(user),
     };
   }
 
@@ -138,5 +208,21 @@ export class AuthService {
       where: { id: userId },
       include: { companies: true },
     });
+  }
+
+  private mapToAdminUser(user: UserWithCompany): AdminUser {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      company: user.companies
+        ? {
+            id: user.companies.id,
+            name: user.companies.name,
+            tier: user.companies.tier,
+          }
+        : null,
+    };
   }
 }

@@ -45,7 +45,7 @@ async function main() {
       password: hashedPassword,
       name: 'Test User',
       companyId: company.id,
-      role: 'USER',
+      role: 'VIEWER',
     },
   });
 

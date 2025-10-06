@@ -4,9 +4,9 @@ import Link from "next/link";
 import { AdminRole, useAdminAuth } from "./AdminContext";
 
 const NAV_ITEMS: Array<{ href: string; label: string; roles: AdminRole[] }> = [
-  { href: "/admin/dashboard", label: "Dashboard", roles: ["ADMIN", "APPROVER", "PURCHASER"] },
+  { href: "/admin/dashboard", label: "Dashboard", roles: ["ADMIN", "SALES", "PURCHASER"] },
   { href: "/admin/users", label: "Users", roles: ["ADMIN"] },
-  { href: "/admin/products", label: "Products", roles: ["ADMIN", "APPROVER", "PURCHASER"] },
+  { href: "/admin/products", label: "Products", roles: ["ADMIN", "SALES", "PURCHASER"] },
 ];
 
 export function AdminNav({ activePath }: { activePath: string }) {

@@ -10,6 +10,29 @@ jobs:
   backend:
     name: Backend CI
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: ncsdb
+          POSTGRES_USER: ncsadmin
+          POSTGRES_PASSWORD: ncs-ci-pass
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd "pg_isready -U ncsadmin -d ncsdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - "6379:6379"
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults: { run: { working-directory: ./backend } }
     
     steps:
@@ -46,6 +69,14 @@ jobs:
       - name: Unit tests (non-DB)
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
         run: npm run test:unit --if-present || true
+
+      - name: End-to-end tests
+        if: ${{ hashFiles('backend/package-lock.json') != '' }}
+        env:
+          E2E_DATABASE_URL: postgresql://ncsadmin:ncs-ci-pass@127.0.0.1:5432/ncsdb?schema=playthrough_e2e
+          REDIS_URL: redis://127.0.0.1:6379
+          JWT_SECRET: ncs-jwt-secret-dev-2025
+        run: npm run test:e2e
 
       - name: Docker build (production image)
         if: ${{ hashFiles('backend/package-lock.json') != '' }}
@@ -103,26 +134,51 @@ jobs:
       - run: npm run build --if-present
       - run: npm run test --if-present || echo "No frontend tests configured"
 
-  smoke-placeholder:
-    name: Frontend Smoke (awaiting preview)
+  smoke-tests:
+    name: Frontend Smoke
     runs-on: ubuntu-latest
     needs: backend
     if: always()
     steps:
-      - name: Preview environment pending
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Ensure preview URL is configured
+        env:
+          PREVIEW_BASE_URL: ${{ secrets.PREVIEW_BASE_URL }}
         run: |
-          cat <<'MESSAGE' >> "$GITHUB_STEP_SUMMARY"
-          ### Frontend smoke tests
+          if [ -z "$PREVIEW_BASE_URL" ]; then
+            echo "::error::PREVIEW_BASE_URL secret is not configured."
+            exit 1
+          fi
 
-          Preview environment not yet available. Skipping `npm run smoke` automation.
+      - name: Check preview health endpoint
+        id: preview
+        env:
+          PREVIEW_BASE_URL: ${{ secrets.PREVIEW_BASE_URL }}
+        run: |
+          BASE="${PREVIEW_BASE_URL%/}"
+          if [ -z "$BASE" ]; then
+            echo "::error::PREVIEW_BASE_URL secret is empty."
+            exit 1
+          fi
+          if [ "${BASE##*/}" = "api" ]; then
+            API_BASE="$BASE"
+            HEALTH_URL="$BASE/health"
+          else
+            API_BASE="$BASE/api"
+            HEALTH_URL="$API_BASE/health"
+          fi
+          echo "API_BASE=$API_BASE" >> "$GITHUB_ENV"
+          curl --fail --show-error --location "$HEALTH_URL"
 
-          To enable:
-          - Set `PREVIEW_BASE_URL` secret with the backend preview URL.
-          - Replace this placeholder with curl health-check + `npm run smoke` once preview API is ready.
-          - Capture logs as artifacts for triage.
-
-          See docs/plans/week-2-follow-up.md for contract details.
-          MESSAGE
+      - name: Run smoke tests against preview
+        env:
+          NEXT_PUBLIC_API_URL: ${{ env.API_BASE }}
+        run: npm run --prefix frontend smoke
 
   api-contract:
     name: API Contract Validation
@@ -153,7 +209,7 @@ jobs:
   status-check:
     name: CI Status
     runs-on: ubuntu-latest
-    needs: [backend, frontend, smoke-placeholder, api-contract]
+    needs: [backend, frontend, smoke-tests, api-contract]
     if: always()
     
     steps:
@@ -161,7 +217,7 @@ jobs:
         run: |
           b="${{ needs.backend.result }}"
           f="${{ needs.frontend.result }}"
-          s="${{ needs['smoke-placeholder'].result }}"
+          s="${{ needs['smoke-tests'].result }}"
           a="${{ needs['api-contract'].result }}"
           echo "backend=$b frontend=$f smoke=$s api=$a"
           if [ "$b" = failure ] || [ "$f" = failure ] || [ "$s" = failure ] || [ "$a" = failure ]; then

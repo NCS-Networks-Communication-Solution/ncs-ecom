@@ -1,0 +1,82 @@
+Last login: Tue Sep 30 13:52:20 on ttys001
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd frontend 
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % npm run lint
+
+> frontend@0.1.0 lint
+> eslint
+
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % npm run lint
+
+> frontend@0.1.0 lint
+> eslint
+
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % npm run build
+
+> frontend@0.1.0 build
+> next build --turbopack
+
+   ▲ Next.js 15.5.3 (Turbopack)
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 61ms
+ ✓ Compiled successfully in 2.1s
+ ✓ Linting and checking validity of types    
+ ✓ Collecting page data    
+ ✓ Generating static pages (8/8)
+ ✓ Collecting build traces    
+ ✓ Finalizing page optimization    
+
+Route (app)                         Size  First Load JS    
+┌ ○ /                            1.83 kB         116 kB
+├ ○ /_not-found                      0 B         114 kB
+├ ○ /admin/dashboard             1.85 kB         122 kB
+├ ○ /admin/products              1.34 kB         121 kB
+└ ○ /admin/users                 1.33 kB         121 kB
++ First Load JS shared by all     120 kB
+  ├ chunks/8082ab48faca5ea1.js   17.2 kB
+  ├ chunks/d04efc723d1783d5.js   59.2 kB
+  ├ chunks/ff42156ceacb9fd8.js   20.5 kB
+  └ other shared chunks (total)  22.9 kB
+
+
+○  (Static)  prerendered as static content
+
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % npm run lint
+
+
+> frontend@0.1.0 lint
+> eslint
+
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % npm run build
+
+
+> frontend@0.1.0 build
+> next build --turbopack
+
+   ▲ Next.js 15.5.3 (Turbopack)
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 44ms
+ ✓ Compiled successfully in 2.1s
+ ✓ Linting and checking validity of types    
+ ✓ Collecting page data    
+ ✓ Generating static pages (8/8)
+ ✓ Collecting build traces    
+ ✓ Finalizing page optimization    
+
+Route (app)                         Size  First Load JS    
+┌ ○ /                            3.47 kB         118 kB
+├ ○ /_not-found                      0 B         114 kB
+├ ○ /admin/dashboard             1.85 kB         122 kB
+├ ○ /admin/products              1.34 kB         121 kB
+└ ○ /admin/users                 1.33 kB         121 kB
++ First Load JS shared by all     120 kB
+  ├ chunks/8082ab48faca5ea1.js   17.2 kB
+  ├ chunks/d04efc723d1783d5.js   59.2 kB
+  ├ chunks/ff42156ceacb9fd8.js   20.5 kB
+  └ other shared chunks (total)  23.1 kB
+
+
+○  (Static)  prerendered as static content
+
+pkaewmanee@Phakkhapons-MacBook-Pro frontend % 

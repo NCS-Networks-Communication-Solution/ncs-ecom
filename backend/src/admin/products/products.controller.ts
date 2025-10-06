@@ -12,7 +12,7 @@ export class AdminProductsController {
   constructor(private readonly adminProductsService: AdminProductsService) {}
 
   @Get()
-  @Roles('ADMIN', 'APPROVER', 'PURCHASER')
+  @Roles('ADMIN', 'SALES')
   listProducts(
     @Query('search') search?: string,
     @Query('categoryId') categoryId?: string,
@@ -21,19 +21,19 @@ export class AdminProductsController {
   }
 
   @Get(':id')
-  @Roles('ADMIN', 'APPROVER', 'PURCHASER')
+  @Roles('ADMIN', 'SALES')
   getProduct(@Param('id') id: string) {
     return this.adminProductsService.getProduct(id);
   }
 
   @Post()
-  @Roles('ADMIN', 'APPROVER')
+  @Roles('ADMIN')
   createProduct(@Body() dto: CreateAdminProductDto) {
     return this.adminProductsService.createProduct(dto);
   }
 
   @Put(':id')
-  @Roles('ADMIN', 'APPROVER')
+  @Roles('ADMIN')
   updateProduct(@Param('id') id: string, @Body() dto: UpdateAdminProductDto) {
     return this.adminProductsService.updateProduct(id, dto);
   }

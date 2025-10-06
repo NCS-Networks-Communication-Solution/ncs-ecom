@@ -5,7 +5,7 @@ import { CartProvider, useCart } from "@/contexts/CartContext";
 import { CartDropdown } from "@/components/cart/CartDropdown";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
 type Product = {
   id: string;
@@ -13,6 +13,11 @@ type Product = {
   nameTh: string;
   sku: string;
   price: string;
+  description?: string | null;
+  descriptionEn?: string | null;
+  descriptionTh?: string | null;
+  specifications?: Record<string, unknown>;
+  images?: string[];
 };
 
 type AuthResponse = {
@@ -57,11 +62,13 @@ function HomeContent() {
           throw new Error(`${res.status} ${res.statusText}`);
         }
         const data = await res.json();
-        setProducts(data);
-        setProductStatus(`Loaded ${data.length} products from API`);
+        const items = Array.isArray(data) ? data : data.items ?? [];
+        const total = Array.isArray(data) ? data.length : data.total ?? items.length;
+        setProducts(items);
+        setProductStatus(`Loaded ${items.length} products from API${total !== items.length ? ` (showing ${items.length} of ${total})` : ''}`);
       } catch (error) {
         console.error(error);
-        setProductStatus("Failed to load product catalog. Is the backend running on port 3001?");
+        setProductStatus("Failed to load product catalog. Is the backend running on http://localhost:3000/api?");
       }
     }
 

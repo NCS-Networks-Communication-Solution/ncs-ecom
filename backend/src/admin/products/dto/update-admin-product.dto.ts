@@ -1,5 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class UpdateAdminProductDto {
   @IsOptional()
@@ -18,6 +27,25 @@ export class UpdateAdminProductDto {
   @IsString()
   @MinLength(5)
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  descriptionEn?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  descriptionTh?: string;
+
+  @IsOptional()
+  @IsObject()
+  specifications?: Record<string, unknown>;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
 
   @IsOptional()
   @Type(() => Number)

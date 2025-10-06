@@ -2,16 +2,40 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CartItem, CartResponse, cartService } from "@/services/cartService";
+import type { CartRequestError } from "@/services/cartService";
+
+const EMPTY_TOTALS = {
+  itemCount: 0,
+  totalQuantity: 0,
+  subtotal: 0,
+  tax: 0,
+  total: 0,
+};
+
+type CartAction = "load" | "add" | "update" | "remove" | "clear";
+
+type CartErrorState = {
+  message: string;
+  status?: number;
+  requestId?: string;
+  action: CartAction;
+};
 
 interface CartContextValue {
   items: CartItem[];
-  totals: CartResponse["totals"];
+  totals: {
+    itemCount: number;
+    totalQuantity: number;
+    subtotal: number;
+    tax: number;
+    total: number;
+  };
   isLoading: boolean;
-  error: string | null;
+  error: CartErrorState | null;
   refreshCart: () => Promise<void>;
   addToCart: (productId: string, quantity: number) => Promise<void>;
-  updateItem: (productId: string, quantity: number) => Promise<void>;
-  removeItem: (productId: string) => Promise<void>;
+  updateItem: (itemId: string, quantity: number) => Promise<void>;
+  removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
   setAccessToken: (token: string | null) => void;
   hasSession: boolean;
@@ -21,16 +45,34 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [totals, setTotals] = useState<CartResponse["totals"]>({ totalItems: 0, totalQuantity: 0, subtotal: 0 });
+  const [totals, setTotals] = useState<CartContextValue["totals"]>(EMPTY_TOTALS);
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<CartErrorState | null>(null);
+
+  const buildCartErrorState = useCallback((err: unknown, action: CartAction): CartErrorState => {
+    const requestError = err as CartRequestError | undefined;
+    const message = err instanceof Error && err.message ? err.message : "Unexpected cart error";
+    return {
+      message,
+      status: requestError?.status,
+      requestId: requestError?.requestId,
+      action,
+    };
+  }, []);
 
   const hasSession = Boolean(accessToken);
 
   const applyCart = useCallback((cart: CartResponse) => {
     setItems(cart.items);
-    setTotals(cart.totals);
+    const totalQuantity = cart.items.reduce((acc, item) => acc + item.quantity, 0);
+    setTotals({
+      itemCount: cart.itemCount,
+      totalQuantity,
+      subtotal: cart.subtotal,
+      tax: cart.tax,
+      total: cart.total,
+    });
   }, []);
 
   const refreshCart = useCallback(async () => {
@@ -38,15 +80,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const cart = await cartService.getCart(accessToken);
-      applyCart(cart);
+      if (cart) {
+        applyCart(cart);
+      }
       setError(null);
     } catch (err) {
       console.error(err);
-      setError((err as Error).message);
+      setError(buildCartErrorState(err, "load"));
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, applyCart]);
+  }, [accessToken, applyCart, buildCartErrorState]);
 
   const addToCart = useCallback(
     async (productId: string, quantity: number) => {
@@ -56,52 +100,58 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       try {
         const cart = await cartService.addToCart(accessToken, productId, quantity);
-        applyCart(cart);
+        if (cart) {
+          applyCart(cart);
+        }
         setError(null);
       } catch (err) {
         console.error(err);
-        setError((err as Error).message);
+        setError(buildCartErrorState(err, "add"));
       } finally {
         setIsLoading(false);
       }
     },
-    [accessToken, applyCart],
+    [accessToken, applyCart, buildCartErrorState],
   );
 
   const updateItem = useCallback(
-    async (productId: string, quantity: number) => {
+    async (itemId: string, quantity: number) => {
       if (!accessToken) return;
       setIsLoading(true);
       try {
-        const cart = await cartService.updateItem(accessToken, productId, quantity);
-        applyCart(cart);
+        const cart = await cartService.updateItem(accessToken, itemId, quantity);
+        if (cart) {
+          applyCart(cart);
+        }
         setError(null);
       } catch (err) {
         console.error(err);
-        setError((err as Error).message);
+        setError(buildCartErrorState(err, "update"));
       } finally {
         setIsLoading(false);
       }
     },
-    [accessToken, applyCart],
+    [accessToken, applyCart, buildCartErrorState],
   );
 
   const removeItem = useCallback(
-    async (productId: string) => {
+    async (itemId: string) => {
       if (!accessToken) return;
       setIsLoading(true);
       try {
-        const cart = await cartService.removeItem(accessToken, productId);
-        applyCart(cart);
+        const cart = await cartService.removeItem(accessToken, itemId);
+        if (cart) {
+          applyCart(cart);
+        }
         setError(null);
       } catch (err) {
         console.error(err);
-        setError((err as Error).message);
+        setError(buildCartErrorState(err, "remove"));
       } finally {
         setIsLoading(false);
       }
     },
-    [accessToken, applyCart],
+    [accessToken, applyCart, buildCartErrorState],
   );
 
   const clearCart = useCallback(async () => {
@@ -109,22 +159,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const cart = await cartService.clear(accessToken);
-      applyCart(cart);
+      if (cart) {
+        applyCart(cart);
+      } else {
+        setItems([]);
+        setTotals(EMPTY_TOTALS);
+      }
       setError(null);
     } catch (err) {
       console.error(err);
-      setError((err as Error).message);
+      setError(buildCartErrorState(err, "clear"));
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, applyCart]);
+  }, [accessToken, applyCart, buildCartErrorState]);
 
   useEffect(() => {
     if (accessToken) {
       refreshCart().catch((err) => console.error(err));
     } else {
       setItems([]);
-      setTotals({ totalItems: 0, totalQuantity: 0, subtotal: 0 });
+      setTotals(EMPTY_TOTALS);
+      setError(null);
     }
   }, [accessToken, refreshCart]);
 

@@ -63,14 +63,24 @@ export class AdminProductsService {
   }
 
   async createProduct(dto: CreateAdminProductDto) {
+    await this.ensureCategoryExists(dto.categoryId);
+
     try {
+      const descriptionEn = dto.descriptionEn ?? dto.description ?? null;
+      const descriptionTh = dto.descriptionTh ?? dto.description ?? null;
+      const fallbackDescription = dto.description ?? descriptionEn ?? descriptionTh ?? null;
+
       return await this.prisma.products.create({
         data: {
           id: randomUUID(),
           sku: dto.sku,
           nameEn: dto.nameEn,
           nameTh: dto.nameTh,
-          description: dto.description,
+          description: fallbackDescription,
+          descriptionEn: descriptionEn ?? undefined,
+          descriptionTh: descriptionTh ?? undefined,
+          specifications: (dto.specifications ?? {}) as Prisma.JsonValue,
+          images: dto.images ?? [],
           price: new Prisma.Decimal(dto.price),
           stock: dto.stock,
           categoryId: dto.categoryId,
@@ -104,8 +114,22 @@ export class AdminProductsService {
       data.nameTh = dto.nameTh;
     }
 
+    if (dto.descriptionEn !== undefined) {
+      data.descriptionEn = dto.descriptionEn;
+    }
+
+    if (dto.descriptionTh !== undefined) {
+      data.descriptionTh = dto.descriptionTh;
+    }
+
     if (dto.description !== undefined) {
       data.description = dto.description;
+      if (dto.descriptionEn === undefined) {
+        data.descriptionEn = dto.description;
+      }
+      if (dto.descriptionTh === undefined) {
+        data.descriptionTh = dto.description;
+      }
     }
 
     if (dto.price !== undefined) {
@@ -117,7 +141,16 @@ export class AdminProductsService {
     }
 
     if (dto.categoryId) {
+      await this.ensureCategoryExists(dto.categoryId);
       data.categories = { connect: { id: dto.categoryId } };
+    }
+
+    if (dto.specifications !== undefined) {
+      data.specifications = dto.specifications as Prisma.JsonValue;
+    }
+
+    if (dto.images !== undefined) {
+      data.images = { set: dto.images };
     }
 
     data.updatedAt = new Date();
@@ -149,6 +182,13 @@ export class AdminProductsService {
       }
 
       throw new BadRequestException('Unable to delete product');
+    }
+  }
+
+  private async ensureCategoryExists(categoryId: string) {
+    const category = await this.prisma.categories.findUnique({ where: { id: categoryId } });
+    if (!category) {
+      throw new BadRequestException(`Category ${categoryId} not found`);
     }
   }
 }

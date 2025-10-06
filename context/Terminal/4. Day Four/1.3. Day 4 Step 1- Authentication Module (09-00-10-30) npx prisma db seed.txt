@@ -1,0 +1,44 @@
+pkaewmanee@Phakkhapons-MacBook-Pro backend % clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma db seed
+
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Running seed command `ts-node --compiler-options {"module":"CommonJS"} prisma/seed.ts` ...
+Created/Found company: { id: 'ncs-company-001', name: 'NCS Network Communications' }
+Created/Updated admin user: admin@ncs.co.th
+Created/Updated test user: user@ncs.co.th
+✅ Database seeding completed successfully!
+🔐 Admin credentials: admin@ncs.co.th / admin123
+👤 Test user credentials: user@ncs.co.th / user123
+
+🌱  The seed command has been executed.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % 
+
+
+
+

@@ -1,6 +1,6 @@
 import { IsEmail, IsIn, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-const ROLE_OPTIONS = ['ADMIN', 'PURCHASER', 'APPROVER', 'USER'] as const;
+const ROLE_OPTIONS = ['ADMIN', 'PURCHASER', 'VIEWER', 'SALES'] as const;
 export type AdminCreatableRole = (typeof ROLE_OPTIONS)[number];
 
 export class CreateAdminUserDto {

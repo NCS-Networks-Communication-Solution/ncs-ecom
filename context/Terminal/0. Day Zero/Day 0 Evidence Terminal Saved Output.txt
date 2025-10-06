@@ -1,0 +1,429 @@
+Last login: Thu Sep 18 15:44:49 on ttys005
+fill@Phakkhapons-MacBook-Pro ncs-ecom % ORG="NCS-Networks-Communication-Solution"
+PROJ_NUM=1
+fill@Phakkhapons-MacBook-Pro ncs-ecom % PROJECT_ID=$(gh project view $PROJ_NUM --owner "$ORG" --format json | jq -r .id)
+STATUS_FIELD_ID=$(gh project field-list $PROJ_NUM --owner "$ORG" --format json | jq -r '.fields[] | select(.name=="Status") .id')
+fill@Phakkhapons-MacBook-Pro ncs-ecom % gh api graphql \
+  -f projectId="$PROJECT_ID" \
+  -f fieldId="$STATUS_FIELD_ID" \
+  -f query='
+  mutation($projectId:ID!, $fieldId:ID!) {
+    updateProjectV2Field(input:{
+      projectId:$projectId,
+      fieldId:$fieldId,
+      singleSelectOptions:[
+        {name:"Backlog"},
+        {name:"Todo"},
+        {name:"In Progress"},
+        {name:"Done"}
+      ]
+    }) {
+      projectV2Field { ... on ProjectV2SingleSelectField { id name options { id name } } }
+    }
+  }'
+{
+  "errors": [
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "projectId"
+      ],
+      "extensions": {
+        "code": "argumentNotAccepted",
+        "name": "UpdateProjectV2FieldInput",
+        "typeName": "InputObject",
+        "argumentName": "projectId"
+      },
+      "locations": [
+        {
+          "line": 4,
+          "column": 7
+        }
+      ],
+      "message": "InputObject 'UpdateProjectV2FieldInput' doesn't accept argument 'projectId'"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        0,
+        "color"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "color",
+        "argumentType": "ProjectV2SingleSelectFieldOptionColor!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 7,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        0,
+        "description"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "description",
+        "argumentType": "String!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 7,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        1,
+        "color"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "color",
+        "argumentType": "ProjectV2SingleSelectFieldOptionColor!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 8,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        1,
+        "description"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "description",
+        "argumentType": "String!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 8,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        2,
+        "color"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "color",
+        "argumentType": "ProjectV2SingleSelectFieldOptionColor!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 9,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        2,
+        "description"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "description",
+        "argumentType": "String!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 9,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        3,
+        "color"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "color",
+        "argumentType": "ProjectV2SingleSelectFieldOptionColor!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 10,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!"
+    },
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "singleSelectOptions",
+        3,
+        "description"
+      ],
+      "extensions": {
+        "code": "missingRequiredInputObjectAttribute",
+        "argumentName": "description",
+        "argumentType": "String!",
+        "inputObjectType": "ProjectV2SingleSelectFieldOptionInput"
+      },
+      "locations": [
+        {
+          "line": 10,
+          "column": 9
+        }
+      ],
+      "message": "Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!"
+    },
+    {
+      "path": [
+        "mutation"
+      ],
+      "extensions": {
+        "code": "variableNotUsed",
+        "variableName": "projectId"
+      },
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "message": "Variable $projectId is declared by anonymous mutation but not used"
+    }
+  ]
+}
+gh: InputObject 'UpdateProjectV2FieldInput' doesn't accept argument 'projectId'
+Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!
+Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!
+Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!
+Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!
+Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!
+Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!
+Argument 'color' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type ProjectV2SingleSelectFieldOptionColor!
+Argument 'description' on InputObject 'ProjectV2SingleSelectFieldOptionInput' is required. Expected type String!
+Variable $projectId is declared by anonymous mutation but not used
+fill@Phakkhapons-MacBook-Pro ncs-ecom % gh api graphql \
+  -f projectId="$PROJECT_ID" \
+  -f fieldId="$STATUS_FIELD_ID" \
+  -f query='
+  mutation($projectId: ID!, $fieldId: ID!) {
+    updateProjectV2Field(input: {
+      projectId: $projectId,
+      fieldId: $fieldId,
+      singleSelectOptions: [
+        {name: "Backlog", color: GRAY, description: "Items that have not been prioritized."},
+        {name: "Todo", color: BLUE, description: "Items prioritized for future work."},
+        {name: "In Progress", color: YELLOW, description: "Items currently being worked on."},
+        {name: "Done", color: GREEN, description: "Items that have been completed."}
+      ]
+    }) {
+      projectV2Field {
+        ... on ProjectV2SingleSelectField {
+          id
+          name
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
+  }'
+{
+  "errors": [
+    {
+      "path": [
+        "mutation",
+        "updateProjectV2Field",
+        "input",
+        "projectId"
+      ],
+      "extensions": {
+        "code": "argumentNotAccepted",
+        "name": "UpdateProjectV2FieldInput",
+        "typeName": "InputObject",
+        "argumentName": "projectId"
+      },
+      "locations": [
+        {
+          "line": 4,
+          "column": 7
+        }
+      ],
+      "message": "InputObject 'UpdateProjectV2FieldInput' doesn't accept argument 'projectId'"
+    },
+    {
+      "path": [
+        "mutation"
+      ],
+      "extensions": {
+        "code": "variableNotUsed",
+        "variableName": "projectId"
+      },
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "message": "Variable $projectId is declared by anonymous mutation but not used"
+    }
+  ]
+}
+gh: InputObject 'UpdateProjectV2FieldInput' doesn't accept argument 'projectId'
+Variable $projectId is declared by anonymous mutation but not used
+fill@Phakkhapons-MacBook-Pro ncs-ecom % gh api graphql \
+  -f fieldId="$STATUS_FIELD_ID" \
+  -f query='
+  mutation($fieldId: ID!) {
+    updateProjectV2Field(input: {
+      fieldId: $fieldId,
+      singleSelectOptions: [
+        {name: "Backlog", color: GRAY, description: "Items that have not been prioritized."},
+        {name: "Todo", color: BLUE, description: "Items prioritized for future work."},
+        {name: "In Progress", color: YELLOW, description: "Items currently being worked on."},
+        {name: "Done", color: GREEN, description: "Items that have been completed."}
+      ]
+    }) {
+      projectV2Field {
+        ... on ProjectV2SingleSelectField {
+          name
+          options {
+            name
+          }
+        }
+      }
+    }
+  }'
+{
+  "data": {
+    "updateProjectV2Field": {
+      "projectV2Field": {
+        "name": "Status",
+        "options": [
+          {
+            "name": "Backlog"
+          },
+          {
+            "name": "Todo"
+          },
+          {
+            "name": "In Progress"
+          },
+          {
+            "name": "Done"
+          }
+        ]
+      }
+    }
+  }
+}
+fill@Phakkhapons-MacBook-Pro ncs-ecom % BACKLOG_OPTION_ID=$(gh project field-list $PROJ_NUM --owner "$ORG" --format json | jq -r '.fields[] | select(.name=="Status") .options[] | select(.name=="Backlog") .id')
+fill@Phakkhapons-MacBook-Pro ncs-ecom % for n in {2..11}; do
+  ISSUE_URL="https://github.com/$ORG/ncs-ecom/issues/$n"
+  echo "Adding issue #$n to project..."
+  ITEM_ID=$(gh project item-add $PROJ_NUM --owner "$ORG" --url "$ISSUE_URL" --format json | jq -r .id)
+
+  echo "Setting status to Backlog for item $ITEM_ID..."
+  gh project item-edit \
+    --id "$ITEM_ID" \
+    --field-id "$STATUS_FIELD_ID" \
+    --project-id "$PROJECT_ID" \
+    --single-select-option-id "$BACKLOG_OPTION_ID"
+  echo "---"
+done
+Adding issue #2 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4el8...
+Edited item "REQ-RFQ-001: Customer RFQ submission (cart → quote request)"
+---
+Adding issue #3 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4elM...
+Edited item "REQ-RFQ-002: Admin quote management interface"
+---
+Adding issue #4 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f4s...
+Edited item "REQ-RFQ-003: Customer quote approval workflow"
+---
+Adding issue #5 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f4Q...
+Edited item "REQ-ORD-001: Order creation from approved quotes"
+---
+Adding issue #6 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f3I...
+Edited item "REQ-ORD-002: Multi-level approval system for large orders"
+---
+Adding issue #7 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f2I...
+Edited item "REQ-PAY-003: Automated Thai tax invoice generation"
+---
+Adding issue #8 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f1g...
+Edited item "REQ-PTY-001: Partner registration and portal setup"
+---
+Adding issue #9 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4f0g...
+Edited item "REQ-CAT-001: Product catalog with technical specifications"
+---
+Adding issue #10 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4fz0...
+Edited item "REQ-INV-001: Real-time inventory management"
+---
+Adding issue #11 to project...
+Setting status to Backlog for item PVTI_lADODeNxQM4BDaL4zge4fzE...
+Edited item "REQ-REP-001: Sales analytics and reporting dashboard"
+---
+fill@Phakkhapons-MacBook-Pro ncs-ecom % 

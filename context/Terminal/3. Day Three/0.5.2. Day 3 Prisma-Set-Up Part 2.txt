@@ -1,0 +1,253 @@
+<q>npm run start:dev</q> Last login: Fri Sep 26 14:14:29 on ttys003
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd ~
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % npm install -g @nestjs/cli
+
+added 245 packages in 15s
+
+45 packages are looking for funding
+  run `npm fund` for details
+pkaewmanee@Phakkhapons-MacBook-Pro ~ % cd ~/Desktop/Project_Hiroshima/ncs-ecom
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % ls -la backend/
+total 200
+drwxr-xr-x   14 pkaewmanee  staff    448 Sep 26 14:24 .
+drwxr-xr-x   17 pkaewmanee  staff    544 Sep 26 11:32 ..
+-rw-r--r--    1 pkaewmanee  staff      0 Sep 25 16:22 .Rhistory
+-rw-r--r--    1 pkaewmanee  staff    185 Sep 26 14:33 .env
+-rw-r--r--    1 pkaewmanee  staff    205 Sep 25 16:22 .env.example
+-rw-r--r--    1 pkaewmanee  staff     89 Sep 26 14:24 .gitignore
+-rw-r--r--    1 pkaewmanee  staff    516 Sep 25 16:22 check_nodes.sh
+drwxr-xr-x    4 pkaewmanee  staff    128 Sep 25 16:22 contracts
+-rwxr-xr-x    1 pkaewmanee  staff    443 Sep 25 16:22 diag_node_check.sh
+drwxr-xr-x  156 pkaewmanee  staff   4992 Sep 26 14:23 node_modules
+-rw-r--r--    1 pkaewmanee  staff  71893 Sep 26 14:23 package-lock.json
+-rw-r--r--    1 pkaewmanee  staff    437 Sep 26 14:23 package.json
+drwxr-xr-x    4 pkaewmanee  staff    128 Sep 26 14:34 prisma
+-rw-r--r--    1 pkaewmanee  staff     30 Sep 25 16:22 test.js
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd backend
+pkaewmanee@Phakkhapons-MacBook-Pro backend % mkdir -p src/{auth,products,companies}
+mkdir -p src/{common,config}
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat > src/main.ts << 'EOF'
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.enableCors();
+  await app.listen(3000);
+  console.log('🚀 NCS Backend API running on http://localhost:3000');
+}
+bootstrap();
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat > src/app.module.ts << 'EOF'
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PrismaService } from './prisma.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService, PrismaService],
+})
+export class AppModule {}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat > src/app.controller.ts << 'EOF'
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+
+  @Get('health')
+  getHealth() {
+    return { status: 'ok', message: 'NCS Backend API is running' };
+  }
+}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat > src/app.service.ts << 'EOF'
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'NCS B2B E-Commerce API v0.1 - Hello World! 🚀';
+  }
+}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % cat > src/prisma.service.ts << 'EOF'
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
+}
+EOF
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run start:dev
+npm error Missing script: "start:dev"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/pkaewmanee/.npm/_logs/2025-09-26T07_44_02_875Z-debug-0.log
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run start:dev
+npm error Missing script: "start:dev"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/pkaewmanee/.npm/_logs/2025-09-26T07_44_14_986Z-debug-0.log
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run
+
+# Now let's add the proper NestJS scripts to package.json
+cat > package.json << 'EOF'
+{
+  "name": "ncs-backend",
+  "version": "0.1.0",
+  "description": "NCS B2B E-Commerce Backend API",
+  "author": "NCS Networks",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/passport": "^10.0.0",
+    "@nestjs/platform-express": "^10.0.0",
+    "@prisma/client": "^6.16.2",
+    "bcrypt": "^5.1.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "prisma": "^6.16.2",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "source-map-support": "^0.5.21",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+EOF
+
+# Install the missing devDependencies
+npm install --save-dev @nestjs/cli @nestjs/schematics @nestjs/testing typescript ts-node
+
+# Create nest-cli.json
+cat > nest-cli.json << 'EOF'
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true
+  }
+}
+EOF
+
+# Create tsconfig.json
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2020",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
+EOF
+
+# Now try starting the development server
+npm run start:dev
+[2:47:07 PM] Starting compilation in watch mode...
+
+contracts/dto/order.dto.ts:13:13 - error TS2304: Cannot find name 'PaymentDto'.
+
+13   payment?: PaymentDto;
+               ~~~~~~~~~~
+
+contracts/dto/order.dto.ts:33:13 - error TS2304: Cannot find name 'ProductDto'.
+
+33   product?: ProductDto;
+               ~~~~~~~~~~
+
+contracts/dto/rfq.dto.ts:34:13 - error TS2304: Cannot find name 'ProductDto'.
+
+34   product?: ProductDto;
+               ~~~~~~~~~~
+
+[2:47:09 PM] Found 3 errors. Watching for file changes.
+
+
+^C
+pkaewmanee@Phakkhapons-MacBook-Pro backend %                             

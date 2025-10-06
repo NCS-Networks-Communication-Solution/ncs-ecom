@@ -1,18 +1,8 @@
-export interface AuthenticatedUser {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  company: {
-    id: string;
-    name: string;
-    tier: string;
-  } | null;
-}
+import { AdminUser } from '../../types/admin.types';
 
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
-  user: AuthenticatedUser;
+  user: AdminUser;
 }

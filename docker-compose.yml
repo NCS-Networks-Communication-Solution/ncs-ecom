@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ncsadmin"]
+      test: ["CMD-SHELL", "pg_isready -U ncsadmin -d ${POSTGRES_DB:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,14 +31,32 @@ services:
     build:
       context: ./backend
       target: dev
+    ports:
+      - "3000:3000"
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - .env
+    environment:
+      DATABASE_URL: postgresql://ncsadmin:${DB_PASSWORD:-defaultpass}@postgres:5432/ncsdb
+      REDIS_URL: redis://redis:6379
+      PORT: ${PORT:-3000}
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000/api/health').then(res => { if (res.ok) process.exit(0); process.exit(1); }).catch(() => process.exit(1));\"",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   pgdata:

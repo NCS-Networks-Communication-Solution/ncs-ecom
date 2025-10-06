@@ -1,0 +1,60 @@
+9172976342ec9e1183142a8122965e51
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateProductDto = void 0;
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+class CreateProductDto {
+}
+exports.CreateProductDto = CreateProductDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "nameEn", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "nameTh", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MaxLength)(100),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "sku", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.MaxLength)(2000),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_transformer_1.Transform)(({ value }) => (value === null || value === undefined ? value : Number(value))),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_transformer_1.Transform)(({ value }) => (value === null || value === undefined ? value : Number.parseInt(value, 10))),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "stock", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "categoryId", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL1VzZXJzL3BrYWV3bWFuZWUvRGVza3RvcC9Qcm9qZWN0X0hpcm9zaGltYS9uY3MtZWNvbS9iYWNrZW5kL3NyYy9wcm9kdWN0cy9kdG8vY3JlYXRlLXByb2R1Y3QuZHRvLnRzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7OztBQUFBLHlEQUE4QztBQUM5QyxxREFBb0c7QUFFcEcsTUFBYSxnQkFBZ0I7Q0FrQzVCO0FBbENELDRDQWtDQztBQTlCQztJQUhDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMkJBQVMsRUFBQyxHQUFHLENBQUM7O2dEQUNDO0FBS2hCO0lBSEMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwyQkFBUyxFQUFDLEdBQUcsQ0FBQzs7Z0RBQ0M7QUFLaEI7SUFIQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDJCQUFTLEVBQUMsR0FBRyxDQUFDOzs2Q0FDRjtBQUtiO0lBSEMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwyQkFBUyxFQUFDLElBQUksQ0FBQzs7cURBQ0s7QUFLckI7SUFIQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLHFCQUFHLEVBQUMsQ0FBQyxDQUFDO0lBQ04sSUFBQSw2QkFBUyxFQUFDLENBQUMsRUFBRSxLQUFLLEVBQUUsRUFBRSxFQUFFLENBQUMsQ0FBQyxLQUFLLEtBQUssSUFBSSxJQUFJLEtBQUssS0FBSyxTQUFTLENBQUMsQ0FBQyxDQUFDLEtBQUssQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLEtBQUssQ0FBQyxDQUFDLENBQUM7OytDQUMzRTtBQUtmO0lBSEMsSUFBQSx1QkFBSyxHQUFFO0lBQ1AsSUFBQSxxQkFBRyxFQUFDLENBQUMsQ0FBQztJQUNOLElBQUEsNkJBQVMsRUFBQyxDQUFDLEVBQUUsS0FBSyxFQUFFLEVBQUUsRUFBRSxDQUFDLENBQUMsS0FBSyxLQUFLLElBQUksSUFBSSxLQUFLLEtBQUssU0FBUyxDQUFDLENBQUMsQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxRQUFRLENBQUMsS0FBSyxFQUFFLEVBQUUsQ0FBQyxDQUFDLENBQUM7OytDQUN4RjtBQUlmO0lBRkMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFOztvREFDTyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyIvVXNlcnMvcGthZXdtYW5lZS9EZXNrdG9wL1Byb2plY3RfSGlyb3NoaW1hL25jcy1lY29tL2JhY2tlbmQvc3JjL3Byb2R1Y3RzL2R0by9jcmVhdGUtcHJvZHVjdC5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgVHJhbnNmb3JtIH0gZnJvbSAnY2xhc3MtdHJhbnNmb3JtZXInO1xuaW1wb3J0IHsgSXNJbnQsIElzTm90RW1wdHksIElzTnVtYmVyLCBJc09wdGlvbmFsLCBJc1N0cmluZywgTWF4TGVuZ3RoLCBNaW4gfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuXG5leHBvcnQgY2xhc3MgQ3JlYXRlUHJvZHVjdER0byB7XG4gIEBJc1N0cmluZygpXG4gIEBJc05vdEVtcHR5KClcbiAgQE1heExlbmd0aCgyNTUpXG4gIG5hbWVFbiE6IHN0cmluZztcblxuICBASXNTdHJpbmcoKVxuICBASXNOb3RFbXB0eSgpXG4gIEBNYXhMZW5ndGgoMjU1KVxuICBuYW1lVGghOiBzdHJpbmc7XG5cbiAgQElzU3RyaW5nKClcbiAgQElzTm90RW1wdHkoKVxuICBATWF4TGVuZ3RoKDEwMClcbiAgc2t1ITogc3RyaW5nO1xuXG4gIEBJc1N0cmluZygpXG4gIEBJc09wdGlvbmFsKClcbiAgQE1heExlbmd0aCgyMDAwKVxuICBkZXNjcmlwdGlvbj86IHN0cmluZztcblxuICBASXNOdW1iZXIoKVxuICBATWluKDApXG4gIEBUcmFuc2Zvcm0oKHsgdmFsdWUgfSkgPT4gKHZhbHVlID09PSBudWxsIHx8IHZhbHVlID09PSB1bmRlZmluZWQgPyB2YWx1ZSA6IE51bWJlcih2YWx1ZSkpKVxuICBwcmljZSE6IG51bWJlcjtcblxuICBASXNJbnQoKVxuICBATWluKDApXG4gIEBUcmFuc2Zvcm0oKHsgdmFsdWUgfSkgPT4gKHZhbHVlID09PSBudWxsIHx8IHZhbHVlID09PSB1bmRlZmluZWQgPyB2YWx1ZSA6IE51bWJlci5wYXJzZUludCh2YWx1ZSwgMTApKSlcbiAgc3RvY2shOiBudW1iZXI7XG5cbiAgQElzU3RyaW5nKClcbiAgQElzTm90RW1wdHkoKVxuICBjYXRlZ29yeUlkITogc3RyaW5nO1xufVxuIl0sInZlcnNpb24iOjN9

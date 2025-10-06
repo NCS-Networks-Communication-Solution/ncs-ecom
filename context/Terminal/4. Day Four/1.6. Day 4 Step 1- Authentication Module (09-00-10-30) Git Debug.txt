@@ -1,0 +1,41 @@
+Last login: Mon Sep 29 12:16:11 on ttys001
+pkaewmanee@Phakkhapons-MacBook-Pro backend % rm package-lock.json
+npm install
+
+up to date, audited 827 packages in 2s
+
+139 packages are looking for funding
+  run `npm fund` for details
+
+5 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % git add package-lock.json
+git commit -m "fix(deps): sync package-lock.json with authentication dependencies
+
+- Add missing bcryptjs@3.0.2 and @types/bcryptjs@2.4.6 lock entries
+- Ensure CI compatibility with npm ci command
+- All authentication dependencies properly locked
+
+Fixes GitHub Actions CI build failure
+REQ-FE-001"
+[feature/jwt-authentication-module 5cd0a68] fix(deps): sync package-lock.json with authentication dependencies
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+pkaewmanee@Phakkhapons-MacBook-Pro backend % git push origin feature/jwt-authentication-module
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 877 bytes | 877.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+remote: 
+remote: GitHub found 1 vulnerability on NCS-Networks-Communication-Solution/ncs-ecom's default branch (1 low). To find out more, visit:
+remote:      https://github.com/NCS-Networks-Communication-Solution/ncs-ecom/security/dependabot/1
+remote: 
+To https://github.com/NCS-Networks-Communication-Solution/ncs-ecom
+   e7fecc3..5cd0a68  feature/jwt-authentication-module -> feature/jwt-authentication-module
+pkaewmanee@Phakkhapons-MacBook-Pro backend % 

@@ -18,7 +18,7 @@ type AdminUserRecord = {
   };
 };
 
-const ROLE_OPTIONS: AdminRole[] = ["ADMIN", "APPROVER", "PURCHASER", "USER"];
+const ROLE_OPTIONS: AdminRole[] = ["ADMIN", "PURCHASER", "VIEWER", "SALES"];
 
 export function UserList() {
   const { auth } = useAdminAuth();
@@ -36,7 +36,7 @@ export function UserList() {
     email: "",
     name: "",
     password: "",
-    role: "USER",
+    role: "VIEWER" as AdminRole,
     companyId: auth?.user.company?.id ?? "",
   });
 
@@ -107,7 +107,13 @@ export function UserList() {
     try {
       const created = await createUser(newUser);
       setUsers((prev) => [created, ...prev]);
-      setNewUser({ email: "", name: "", password: "", role: "USER", companyId: auth?.user.company?.id ?? "" });
+      setNewUser({
+        email: "",
+        name: "",
+        password: "",
+        role: "VIEWER",
+        companyId: auth?.user.company?.id ?? "",
+      });
     } catch (err) {
       console.error(err);
       setError((err as Error).message);
@@ -202,7 +208,9 @@ export function UserList() {
             <select
               className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-cyan-500 focus:outline-none"
               value={newUser.role}
-              onChange={(event) => setNewUser((prev) => ({ ...prev, role: event.target.value }))}
+              onChange={(event) =>
+                setNewUser((prev) => ({ ...prev, role: event.target.value as AdminRole }))
+              }
             >
               {ROLE_OPTIONS.map((role) => (
                 <option key={role} value={role}>

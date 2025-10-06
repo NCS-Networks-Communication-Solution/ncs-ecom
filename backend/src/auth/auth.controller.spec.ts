@@ -14,13 +14,13 @@ describe('AuthController', () => {
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',
         expiresIn: 86400,
-        user: { id: '1', email: 'test@ncs.co.th', name: 'Test User', role: 'USER', company: null },
+        user: { id: '1', email: 'test@ncs.co.th', name: 'Test User', role: 'PURCHASER', company: null },
       }),
       login: jest.fn().mockResolvedValue({
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',
         expiresIn: 86400,
-        user: { id: '1', email: 'test@ncs.co.th', name: 'Test User', role: 'USER', company: null },
+        user: { id: '1', email: 'test@ncs.co.th', name: 'Test User', role: 'PURCHASER', company: null },
       }),
     } as unknown as Partial<Record<keyof AuthService, jest.Mock>>;
 

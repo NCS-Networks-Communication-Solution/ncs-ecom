@@ -1,13 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY, AppRole } from '../decorators/roles.decorator';
+import { ROLES_KEY } from '../decorators/roles.decorator';
+import { AdminRole } from '../../types/admin.types';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<AppRole[]>(ROLES_KEY, [
+    const requiredRoles = this.reflector.getAllAndOverride<AdminRole[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -20,9 +21,13 @@ export class RolesGuard implements CanActivate {
     const user = request.user;
 
     if (!user || !user.role) {
-      return false;
+      throw new ForbiddenException('Missing role information for current user');
     }
 
-    return requiredRoles.includes(user.role);
+    if (!requiredRoles.includes(user.role)) {
+      throw new ForbiddenException(`Requires one of roles: ${requiredRoles.join(', ')}`);
+    }
+
+    return true;
   }
 }

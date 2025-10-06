@@ -1,0 +1,112 @@
+Last login: Tue Sep 30 13:52:48 on ttys002
+pkaewmanee@Phakkhapons-MacBook-Pro ncs-ecom % cd backend 
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run lint
+
+> ncs-backend@0.1.0 lint
+> eslint "{src,apps,libs,test}/**/*.ts" --fix
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run test
+
+> ncs-backend@0.1.0 test
+> jest
+
+ PASS  src/users/users.service.spec.ts (5.1 s)
+ PASS  src/products/products.service.spec.ts (5.124 s)
+ PASS  src/products/products.controller.spec.ts (5.155 s)
+ PASS  src/auth/auth.controller.spec.ts (5.389 s)
+ PASS  src/auth/auth.service.spec.ts (5.592 s)
+
+Test Suites: 5 passed, 5 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        6.601 s
+Ran all test suites.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run lint
+
+> ncs-backend@0.1.0 lint
+> eslint "{src,apps,libs,test}/**/*.ts" --fix
+
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run test
+
+> ncs-backend@0.1.0 test
+> jest
+
+ PASS  src/users/users.service.spec.ts
+ PASS  src/products/products.service.spec.ts
+ PASS  src/products/products.controller.spec.ts
+ PASS  src/auth/auth.controller.spec.ts
+ PASS  src/auth/auth.service.spec.ts
+
+Test Suites: 5 passed, 5 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        4.593 s, estimated 5 s
+Ran all test suites.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma migrate deploy
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "ncsdb", schema "public" at "localhost:5432"
+
+Error: P1001: Can't reach database server at `localhost:5432`
+
+Please make sure your database server is running at `localhost:5432`.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run db:seed
+npm error Missing script: "db:seed"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/pkaewmanee/.npm/_logs/2025-09-30T09_18_45_617Z-debug-0.log
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma migrate deploy
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "ncsdb", schema "public" at "localhost:5432"
+
+3 migrations found in prisma/migrations
+
+Applying migration `20250930090000_add_user_is_active`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20250930090000_add_user_is_active/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npm run db:seed          
+npm error Missing script: "db:seed"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /Users/pkaewmanee/.npm/_logs/2025-09-30T09_26_36_104Z-debug-0.log
+pkaewmanee@Phakkhapons-MacBook-Pro backend % npx prisma db seed
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Running seed command `ts-node prisma/seed.ts` ...
+🌱 Starting database seeding...
+🧹 Cleaning existing data...
+🏢 Creating companies...
+👥 Creating users...
+📂 Creating categories...
+📦 Creating products...
+✅ Database seeded successfully!
+📊 Summary:
+  Companies: 2
+  Users: 3
+  Categories: 3
+  Products: 7
+
+🔐 Test Login Credentials:
+  Admin: admin@ncs.co.th / admin123
+  Sales: sales@ncs.co.th / user123
+  Buyer: buyer@test.com / user123
+
+🌱  The seed command has been executed.
+pkaewmanee@Phakkhapons-MacBook-Pro backend % 

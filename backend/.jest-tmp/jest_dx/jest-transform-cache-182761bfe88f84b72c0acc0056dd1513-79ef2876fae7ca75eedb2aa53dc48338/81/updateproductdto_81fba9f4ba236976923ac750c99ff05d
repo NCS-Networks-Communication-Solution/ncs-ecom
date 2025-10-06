@@ -1,0 +1,57 @@
+48112f6a29777863deade26d82a6e767
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateProductDto = void 0;
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+class UpdateProductDto {
+}
+exports.UpdateProductDto = UpdateProductDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "nameEn", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "nameTh", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.MaxLength)(2000),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_transformer_1.Transform)(({ value }) => (value === null || value === undefined ? value : Number(value))),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_transformer_1.Transform)(({ value }) => (value === null || value === undefined ? value : Number.parseInt(value, 10))),
+    __metadata("design:type", Number)
+], UpdateProductDto.prototype, "stock", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.MaxLength)(255),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "categoryId", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL1VzZXJzL3BrYWV3bWFuZWUvRGVza3RvcC9Qcm9qZWN0X0hpcm9zaGltYS9uY3MtZWNvbS9iYWNrZW5kL3NyYy9wcm9kdWN0cy9kdG8vdXBkYXRlLXByb2R1Y3QuZHRvLnRzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7OztBQUFBLHlEQUE4QztBQUM5QyxxREFBd0Y7QUFFeEYsTUFBYSxnQkFBZ0I7Q0FnQzVCO0FBaENELDRDQWdDQztBQTVCQztJQUhDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMkJBQVMsRUFBQyxHQUFHLENBQUM7O2dEQUNDO0FBS2hCO0lBSEMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwyQkFBUyxFQUFDLEdBQUcsQ0FBQzs7Z0RBQ0M7QUFLaEI7SUFIQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDJCQUFTLEVBQUMsSUFBSSxDQUFDOztxREFDSztBQU1yQjtJQUpDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEscUJBQUcsRUFBQyxDQUFDLENBQUM7SUFDTixJQUFBLDZCQUFTLEVBQUMsQ0FBQyxFQUFFLEtBQUssRUFBRSxFQUFFLEVBQUUsQ0FBQyxDQUFDLEtBQUssS0FBSyxJQUFJLElBQUksS0FBSyxLQUFLLFNBQVMsQ0FBQyxDQUFDLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQzs7K0NBQzNFO0FBTWY7SUFKQyxJQUFBLHVCQUFLLEdBQUU7SUFDUCxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLHFCQUFHLEVBQUMsQ0FBQyxDQUFDO0lBQ04sSUFBQSw2QkFBUyxFQUFDLENBQUMsRUFBRSxLQUFLLEVBQUUsRUFBRSxFQUFFLENBQUMsQ0FBQyxLQUFLLEtBQUssSUFBSSxJQUFJLEtBQUssS0FBSyxTQUFTLENBQUMsQ0FBQyxDQUFDLEtBQUssQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLFFBQVEsQ0FBQyxLQUFLLEVBQUUsRUFBRSxDQUFDLENBQUMsQ0FBQzs7K0NBQ3hGO0FBS2Y7SUFIQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDJCQUFTLEVBQUMsR0FBRyxDQUFDOztvREFDSyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyIvVXNlcnMvcGthZXdtYW5lZS9EZXNrdG9wL1Byb2plY3RfSGlyb3NoaW1hL25jcy1lY29tL2JhY2tlbmQvc3JjL3Byb2R1Y3RzL2R0by91cGRhdGUtcHJvZHVjdC5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgVHJhbnNmb3JtIH0gZnJvbSAnY2xhc3MtdHJhbnNmb3JtZXInO1xuaW1wb3J0IHsgSXNJbnQsIElzTnVtYmVyLCBJc09wdGlvbmFsLCBJc1N0cmluZywgTWF4TGVuZ3RoLCBNaW4gfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuXG5leHBvcnQgY2xhc3MgVXBkYXRlUHJvZHVjdER0byB7XG4gIEBJc1N0cmluZygpXG4gIEBJc09wdGlvbmFsKClcbiAgQE1heExlbmd0aCgyNTUpXG4gIG5hbWVFbj86IHN0cmluZztcblxuICBASXNTdHJpbmcoKVxuICBASXNPcHRpb25hbCgpXG4gIEBNYXhMZW5ndGgoMjU1KVxuICBuYW1lVGg/OiBzdHJpbmc7XG5cbiAgQElzU3RyaW5nKClcbiAgQElzT3B0aW9uYWwoKVxuICBATWF4TGVuZ3RoKDIwMDApXG4gIGRlc2NyaXB0aW9uPzogc3RyaW5nO1xuXG4gIEBJc051bWJlcigpXG4gIEBJc09wdGlvbmFsKClcbiAgQE1pbigwKVxuICBAVHJhbnNmb3JtKCh7IHZhbHVlIH0pID0+ICh2YWx1ZSA9PT0gbnVsbCB8fCB2YWx1ZSA9PT0gdW5kZWZpbmVkID8gdmFsdWUgOiBOdW1iZXIodmFsdWUpKSlcbiAgcHJpY2U/OiBudW1iZXI7XG5cbiAgQElzSW50KClcbiAgQElzT3B0aW9uYWwoKVxuICBATWluKDApXG4gIEBUcmFuc2Zvcm0oKHsgdmFsdWUgfSkgPT4gKHZhbHVlID09PSBudWxsIHx8IHZhbHVlID09PSB1bmRlZmluZWQgPyB2YWx1ZSA6IE51bWJlci5wYXJzZUludCh2YWx1ZSwgMTApKSlcbiAgc3RvY2s/OiBudW1iZXI7XG5cbiAgQElzU3RyaW5nKClcbiAgQElzT3B0aW9uYWwoKVxuICBATWF4TGVuZ3RoKDI1NSlcbiAgY2F0ZWdvcnlJZD86IHN0cmluZztcbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

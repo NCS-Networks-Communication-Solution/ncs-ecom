@@ -19,7 +19,7 @@ export function CartItem({ item }: { item: CartItemType }) {
     setIsUpdating(true);
     setError(null);
     try {
-      await updateItem(item.product.id, newQuantity);
+      await updateItem(item.id, newQuantity);
       setQuantity(newQuantity);
     } catch (err) {
       setError((err as Error).message);
@@ -32,7 +32,7 @@ export function CartItem({ item }: { item: CartItemType }) {
     setIsUpdating(true);
     setError(null);
     try {
-      await removeItem(item.product.id);
+      await removeItem(item.id);
     } catch (err) {
       setError((err as Error).message);
     } finally {

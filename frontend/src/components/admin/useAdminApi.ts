@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAdminAuth } from "./AdminContext";
+import { AdminRole, useAdminAuth } from "./AdminContext";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
 export function useAdminApi() {
   const { apiFetch } = useAdminAuth();
@@ -17,7 +17,7 @@ export function useAdminApi() {
   }, [apiFetch]);
 
   const listUsers = useCallback(
-    async (params: { companyId?: string; role?: string; status?: string } = {}) => {
+    async (params: { companyId?: string; role?: AdminRole; status?: string } = {}) => {
       const searchParams = new URLSearchParams();
       if (params.companyId) searchParams.set("companyId", params.companyId);
       if (params.role) searchParams.set("role", params.role);
@@ -38,7 +38,7 @@ export function useAdminApi() {
       email: string;
       name: string;
       password: string;
-      role: string;
+      role: AdminRole;
       companyId: string;
     }) => {
       const response = await apiFetch(`${API_URL}/admin/users`, {
@@ -57,7 +57,10 @@ export function useAdminApi() {
   );
 
   const updateUser = useCallback(
-    async (id: string, payload: Partial<{ email: string; name: string; password: string; role: string; companyId: string }>) => {
+    async (
+      id: string,
+      payload: Partial<{ email: string; name: string; password: string; role: AdminRole; companyId: string }>,
+    ) => {
       const response = await apiFetch(`${API_URL}/admin/users/${id}`, {
         method: "PUT",
         body: JSON.stringify(payload),
@@ -99,7 +102,8 @@ export function useAdminApi() {
       if (!response.ok) {
         throw new Error("Failed to load products");
       }
-      return response.json();
+      const data = await response.json();
+      return Array.isArray(data) ? data : data.items ?? [];
     },
     [apiFetch],
   );
@@ -110,6 +114,10 @@ export function useAdminApi() {
       nameEn: string;
       nameTh: string;
       description?: string;
+      descriptionEn?: string;
+      descriptionTh?: string;
+      specifications?: Record<string, unknown>;
+      images?: string[];
       price: number;
       stock: number;
       categoryId: string;
@@ -137,6 +145,10 @@ export function useAdminApi() {
         nameEn: string;
         nameTh: string;
         description?: string;
+        descriptionEn?: string;
+        descriptionTh?: string;
+        specifications?: Record<string, unknown>;
+        images?: string[];
         price: number;
         stock: number;
         categoryId: string;

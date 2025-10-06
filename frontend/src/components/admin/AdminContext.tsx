@@ -2,9 +2,9 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
-export type AdminRole = "ADMIN" | "APPROVER" | "PURCHASER" | "USER";
+export type AdminRole = "ADMIN" | "PURCHASER" | "VIEWER" | "SALES";
 
 type AdminCompany = {
   id: string;
@@ -75,7 +75,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = (await response.json()) as AdminAuthState;
-      const allowedRoles: AdminRole[] = ["ADMIN", "APPROVER", "PURCHASER"];
+      const allowedRoles: AdminRole[] = ["ADMIN", "SALES", "PURCHASER"];
 
       if (!allowedRoles.includes(data.user.role)) {
         throw new Error("Insufficient permissions for admin console");

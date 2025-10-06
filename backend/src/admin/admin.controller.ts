@@ -11,13 +11,13 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get('overview')
-  @Roles('ADMIN', 'APPROVER')
+  @Roles('ADMIN', 'SALES')
   getOverview() {
     return this.adminService.getOverview();
   }
 
   @Get('companies')
-  @Roles('ADMIN', 'APPROVER')
+  @Roles('ADMIN', 'SALES')
   listCompanies(@Query('tier') tier?: string) {
     return this.adminService.listCompanies(tier);
   }

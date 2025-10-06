@@ -19,7 +19,7 @@ export class AdminUsersController {
     @Query('role') role?: string,
     @Query('status') status?: string,
   ) {
-    const allowedRoles = new Set(['ADMIN', 'APPROVER', 'PURCHASER', 'USER']);
+    const allowedRoles = new Set(['ADMIN', 'PURCHASER', 'VIEWER', 'SALES']);
     const normalizedRole =
       typeof role === 'string' && allowedRoles.has(role.toUpperCase())
         ? role.toUpperCase()
